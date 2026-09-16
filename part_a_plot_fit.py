@@ -26,7 +26,12 @@ for degree in [12, 15]:
 
     theta = ols(X_train_centered, y_train)
 
-    plt.plot(x_plot, X_plot_centered @ theta, linewidth=2, label=f"OLS degree {degree}")
+    plt.plot(
+        x_plot, 
+        X_plot_centered @ theta, 
+        linewidth=2, 
+        label=f"OLS degree {degree}"
+        )
 
 plt.xlabel("$x$")
 plt.ylabel("$y$")
