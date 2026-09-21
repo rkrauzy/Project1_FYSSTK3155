@@ -6,7 +6,7 @@ from src.plotting import save_fig
 x = np.linspace(-2, 2, 100)
 
 def f(x):
-    return 1 - np.exp**x
+    return x**3
 
 
 plt.plot(x, f(x))
