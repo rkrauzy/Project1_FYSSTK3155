@@ -96,7 +96,7 @@ jupyter
 I terminal skriver man bare "pip install -r requirements.txt". Ikke en veldig viktig fil, kan fikse på slutten. 
 
 ### (3) data.py
-Ralph skal fikse denne, men generelt sett er denne for å alltid ha ferdig gjenbrukbar data. :
+Raph skal fikse denne, men generelt sett er denne for å alltid ha ferdig gjenbrukbar data. :
 
 ```
 SEED = 2026 # eller noe
