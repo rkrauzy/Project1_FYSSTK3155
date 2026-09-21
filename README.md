@@ -44,13 +44,13 @@ Project1_FYSSTK3155/
 ### (1) LLM_usage.md
 Hver gang man genererer med claude kode skal man manuelt fylle inn eksempelvis: 
 
-## Code (levels 0-4)
+#### Code (levels 0-4)
 | File | Level | Who | Description |
 |---|---|---|---|
 | src/data.py | 0 | Albert | Written independently |
 | src/gradient_descent.py | 3 | ... | Claude gave the class skeleton; update rules written and tested by us |
 
-## Text (levels 0-3)
+#### Text (levels 0-3)
 | Section | Level | Notes |
 |---|---|---|
 | Abstract | 1 | Grammar check |
@@ -78,7 +78,7 @@ Her legger man inn pakker man må installere for å kjøre programmet, eksempelv
 numpy  
 scipy  
 matplotlib  
-scikit-learn  
+sklearn
 jax  
 jupyter  
 ```
@@ -121,5 +121,11 @@ plt.close()          # frigjør minne når et script lager mange figurer.
 ```
 Her har man laget et plot og kaller det for "partA_mse_vs_degree". Det vil lagres i figures/ mappen i repoet sammen med resten av bildene. Plottet blir lagret i mappen som en .png.
 Kan bruke plt.show() Hvis man vil se plottet umiddelbart. 
+
+
+# Tips til kjøring i terminal:
+når man står i repo roten (der du kan se src og parts og readme.md og alt annet) skriv for eksempel: 
+python -m parts.part_c.test.py
+
 
 
