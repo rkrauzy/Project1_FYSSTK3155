@@ -10,25 +10,33 @@ Vi forsøker å ha all gjenbrukbar kode i src (source) så når f.eks albert ska
 Når man løser en oppgave kan det gjøre inni  for eksempel part_c/ mappa og 
 
 
+```
 Project1_FYSSTK3155/
-├── README.md              # hva prosjektet er, hvordan kjøre koden
-├── LLM_usage.md
-├── requirements.txt      
-├── src/                   # gjenbrukbar kode som importeres
-│   ├── data.py            # Runge-funksjon, støy, skalering, train/test-split
-│   ├── metrics.py         # mse, r2
-│   ├── models.py          # OLS, Ridge, Lasso
-│   ├── gradient_descent.py  # GD, momentum, AdaGrad, RMSprop, Adam, SGD
-│   └── resampling.py       # bootstrap, k-fold CV
-│   └── plotting.py         # lagrer alle plots i figures
+├── README.md                # hva prosjektet er, hvordan kjøre koden
+├── LLM_usage.md             # løpende logg over LLM-bruk
+├── requirements.txt         # pakker som må installeres
+├── .gitignore
 │
-├── parts/                  # én mappe per deloppgave
-│   ├── part_a/ fil.py
-│   ├── part_b/ fil.py
+├── src/                     # gjenbrukbar kode som importeres
+│   ├── __init__.py
+│   ├── data.py              # Runge-funksjon, støy, skalering, train/test split
+│   ├── metrics.py           # mse, r2
+│   ├── models.py            # OLS, Ridge, Lasso
+│   ├── gradient_descent.py  # GD, momentum, AdaGrad, RMSprop, Adam, SGD
+│   ├── resampling.py        # bootstrap, k-fold CV
+│   └── plotting.py          # lagrer alle plott i figures/
+│
+├── parts/                   # én mappe per deloppgave
+│   ├── __init__.py
+│   ├── part_a/
+│   │   └── fil.py
+│   ├── part_b/
+│   │   └── fil.py
 │   └── ...
-├── notebooks/             # utforsking og eksperimenter, bare hvis noen vil bruke det
-└── figures/               # alle ferdige plott, denne laster dere opp til Overleaf
-
+│
+├── notebooks/               # utforsking og eksperimenter, valgfritt
+└── figures/                 # alle ferdige plott, lastes opp til Overleaf
+```
 
 ## Forklaring av ulike mapper: 
 ### (1) LLM_usage.md
@@ -98,12 +106,12 @@ Eksempelvis når jeg har skrevet kode og ønsker å lage et bilde skriver man ko
 
 from src.plotting import save_fig
 
-plt.plot(degrees, mse_test)
-plt.xlabel("Polynomial degree")
-plt.ylabel("MSE")
-save_fig("partA_mse_vs_degree")
-plt.close()          # frigjør minne når et script lager mange figurer
+plt.plot(degrees, mse_test)  
+plt.xlabel("Polynomial degree")  
+plt.ylabel("MSE")  
+save_fig("partA_mse_vs_degree")   
+plt.close()          # frigjør minne når et script lager mange figurer. 
 
-Her har man laget et plot og kaller det for "partA_mse_vs_degree. Det vil lagres i figures/ mappen i repoet sammen med resten av bildene. Plottet blir lagret i mappen som en .png. 
+Her har man laget et plot og kaller det for "partA_mse_vs_degree". Det vil lagres i figures/ mappen i repoet sammen med resten av bildene. Plottet blir lagret i mappen som en .png. 
 
 
