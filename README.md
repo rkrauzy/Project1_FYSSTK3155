@@ -7,7 +7,17 @@
 
 Vi forsøker å ha all gjenbrukbar kode i src (source) så når f.eks albert skal gjøre oppgave c har jeg ferdig data som kan hentes ut og kan bare kalle på modellene jeg trenger, f.eks OLS eller Lasso Hvis jeg skulle trenge å resample i oppgaven min ligger også koden i resampling.py og jeg kan bare kalle på det. 
 
-Når man løser en oppgave kan det gjøre inni  for eksempel part_c/ mappa og 
+Når man løser en oppgave kan det gjøres inni for eksempel part_c/ -mappa. 
+
+Hvis jeg i oppgaven jeg løser mmå burke lasso for eksempel kan jeg hente den øverst i filen min slik: 
+
+```
+from src.models import lasso
+
+fit = lasso(..)   
+```
+når de funksjonene er laget da. 
+
 
 
 ```
