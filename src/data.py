@@ -1,7 +1,7 @@
 import numpy as np
-from sklearn.model_selection import train_test_split as _sklearn_split
+from sklearn.model_selection import train_test_split
 
-SEED = 42
+SEED = 2026
 
 
 def runge(x):
@@ -42,4 +42,5 @@ def center_y(y_train):
 
 
 def split_data(x, y, test_size=0.2, seed=SEED):
-    return _sklearn_split(x, y, test_size=test_size, random_state=seed)
+    return train_test_split(x, y, test_size=test_size, random_state=seed)
+
