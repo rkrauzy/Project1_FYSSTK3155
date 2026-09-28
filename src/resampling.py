@@ -6,9 +6,20 @@ from src.models import ols
 
 def bootstrap(x_train, x_test, y_train, y_test, max_degree, n_bootstraps):
     """
-    Reused code fom week36tuesday. Modified to fit our repo structure.
-    Had to change array size due to not using intercept in our design matrix. 
+    Bootstrap estimate of test error, bias^2 and variance vs polynomial degree (OLS).
+    Reused code from week36tuesday, modified to fit our repo structure.
+    Degrees start at 1 since our design matrix has no intercept column,
+    so degree d is stored at index d - 1.
 
+    LLM-assisted
+    ------------
+    Tool: Claude, Opus 5.5 (Anthropic, September 2026)
+    Level: 2 - Snippet
+    Role: Assisted with adapting the week 36 Tuesday bootstrap code to the
+    repository structure, including scaling and centering of each bootstrap
+    sample and reshaping y_test to a column vector.
+    Verification: Reviewed and executed by the project authors, and checked
+    that error = bias + variance to machine precision.
     """
     y_test = y_test.reshape(-1, 1)
     error, bias, variance = (np.zeros(max_degree) for _ in range(3))
