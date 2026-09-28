@@ -8,54 +8,36 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-from sklearn.model_selection import train_test_split
-
-from src.data import generate_data, design_matrix
+from src.data import generate_data, design_matrix, scale_matrix, center_y, split_data
 from src.models import ridge
+from src.plotting import save_fig
 
 
-x, y, y_true = generate_data(n=100, sigma=0.1, seed=42)
-
-x_train, x_test, y_train, y_test = train_test_split(
-    x,
-    y,
-    test_size=0.2,
-    random_state=42
-)
+x, y, y_true = generate_data(n=100, sigma=0.1)
+x_train, x_test, y_train, y_test = split_data(x, y)
+y_train_c, y_mean = center_y(y_train)
 
 degree = 15
 lambdas = np.logspace(-8, 2, 11)
 
 X_train = design_matrix(x_train, degree)
+X_train_s = scale_matrix(X_train)
 
-mean_X = np.mean(X_train[:, 1:], axis=0)
-X_train[:, 1:] = X_train[:, 1:] - mean_X
+theta_values = np.zeros((len(lambdas), X_train_s.shape[1]))
 
-theta_values = np.zeros((len(lambdas), X_train.shape[1]))
-
-for i, lmbda in enumerate(lambdas):
-    theta = ridge(X_train, y_train, lmbda)
-    theta_values[i, :] = theta
+for i, lmb in enumerate(lambdas):
+    theta_values[i] = ridge(X_train_s, y_train_c, lmb)
 
 plt.figure(figsize=(10, 6))
 
-for j in range(theta_values.shape[1]):
-    plt.plot(
-        lambdas,
-        theta_values[:, j],
-        marker="o",
-        linewidth=2,
-        label=f"theta_{j}"
-    )
+for k in range(theta_values.shape[1]):
+    plt.plot(lambdas, theta_values[:, k], "o-", linewidth=2, label=f"θ_{k + 1}")
 
 plt.xscale("log")
 plt.yscale("symlog", linthresh=1)
-plt.xlabel("Lambda")
+plt.xlabel("λ")
 plt.ylabel("Coefficient value")
-plt.title("Ridge: Coefficients as a function of lambda")
-plt.legend(
-    bbox_to_anchor=(1.05, 1),
-    loc="upper left"
-)
+plt.title("Ridge: Coefficients as a function of λ (degree 15)")
+plt.legend(bbox_to_anchor=(1.05, 1), loc="upper left", fontsize=7)
 plt.tight_layout()
-plt.show()
+save_fig("ridge_parameters")

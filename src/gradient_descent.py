@@ -17,7 +17,7 @@ def ols_cost(X, y, theta):
 
 def ridge_cost(X, y, theta, lmbda):
     """
-    Compute the Ridge cost with an unregularized intercept.
+    Compute the Ridge cost: (1/n)||Xθ-y||² + λ||θ||².
 
     LLM-assisted
     ------------
@@ -26,9 +26,7 @@ def ridge_cost(X, y, theta, lmbda):
     Role: Assisted with the formulation and implementation of the Ridge cost.
     Verification: Reviewed and tested by the project authors.
     """
-    penalty = np.sum(theta[1:] ** 2)
-
-    return np.mean((X @ theta - y) ** 2) + lmbda * penalty / len(y)
+    return np.mean((X @ theta - y) ** 2) + lmbda * np.sum(theta ** 2)
 
 
 def ols_gradient(X, y, theta):
@@ -56,19 +54,13 @@ def ridge_gradient(X, y, theta, lmbda):
     ------------
     Tool: ChatGPT, GPT-5.6 Sol (OpenAI, September 2026)
     Level: 4 - Substantial
-    Role: Assisted with the analytical Ridge gradient, including exclusion of
-    the intercept from regularization.
+    Role: Assisted with the analytical Ridge gradient formulation.
     Verification: Reviewed and later checked against automatic differentiation
     by the project authors.
     """
     n = len(y)
 
-    penalty = theta.copy()
-    penalty[0] = 0
-
-    return (2 / n) * (
-        X.T @ (X @ theta - y) + lmbda * penalty
-    )
+    return (2 / n) * X.T @ (X @ theta - y) + 2 * lmbda * theta
 
 
 def gradient_descent(
