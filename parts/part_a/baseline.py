@@ -7,98 +7,54 @@
 
 import numpy as np
 import matplotlib.pyplot as plt
+from sklearn.metrics import mean_squared_error, r2_score
 
-from sklearn.model_selection import train_test_split
-
-from src.data import generate_data, design_matrix
+from src.data import generate_data, design_matrix, scale_matrix, center_y, split_data
 from src.models import ols
-from src.metrics import mse, r2
+from src.plotting import save_fig
 
 
-x, y, y_true = generate_data(n=100, sigma=0.1, seed=42)
-
-x_train, x_test, y_train, y_test = train_test_split(
-    x,
-    y,
-    test_size=0.2,
-    random_state=42
-)
+x, y, y_true = generate_data(n=100, sigma=0.1)
+x_train, x_test, y_train, y_test = split_data(x, y)
+y_train_c, y_mean = center_y(y_train)
 
 degrees = range(1, 16)
+mse_train, mse_test = [], []
+r2_train, r2_test = [], []
 
-train_mse = []
-test_mse = []
-train_r2 = []
-test_r2 = []
+for d in degrees:
+    X_train = design_matrix(x_train, d)
+    X_test = design_matrix(x_test, d)
+    X_train_s, X_test_s = scale_matrix(X_train, X_test)
 
-for degree in degrees:
-    X_train = design_matrix(x_train, degree)
-    X_test = design_matrix(x_test, degree)
+    theta = ols(X_train_s, y_train_c)
 
-    mean_X = np.mean(X_train[:, 1:], axis=0)
+    y_pred_train = X_train_s @ theta + y_mean
+    y_pred_test = X_test_s @ theta + y_mean
 
-    X_train[:, 1:] = X_train[:, 1:] - mean_X
-    X_test[:, 1:] = X_test[:, 1:] - mean_X
-
-    theta = ols(X_train, y_train)
-
-    y_train_pred = X_train @ theta
-    y_test_pred = X_test @ theta
-
-    train_mse.append(mse(y_train, y_train_pred))
-    test_mse.append(mse(y_test, y_test_pred))
-
-    train_r2.append(r2(y_train, y_train_pred))
-    test_r2.append(r2(y_test, y_test_pred))
+    mse_train.append(mean_squared_error(y_train, y_pred_train))
+    mse_test.append(mean_squared_error(y_test, y_pred_test))
+    r2_train.append(r2_score(y_train, y_pred_train))
+    r2_test.append(r2_score(y_test, y_pred_test))
 
 plt.figure(figsize=(9, 6))
-
-plt.plot(
-    degrees,
-    train_mse,
-    marker="o",
-    linewidth=2,
-    label="Training MSE"
-)
-
-plt.plot(
-    degrees,
-    test_mse,
-    marker="o",
-    linewidth=2,
-    label="Test MSE"
-)
-
+plt.semilogy(degrees, mse_train, "o-", linewidth=2, label="Train MSE")
+plt.semilogy(degrees, mse_test, "o-", linewidth=2, label="Test MSE")
 plt.xlabel("Polynomial degree")
 plt.ylabel("MSE")
 plt.title("OLS: MSE as a function of polynomial degree")
 plt.xticks(degrees)
 plt.legend()
 plt.tight_layout()
-plt.show()
+save_fig("ols_mse")
 
 plt.figure(figsize=(9, 6))
-
-plt.plot(
-    degrees,
-    train_r2,
-    marker="o",
-    linewidth=2,
-    label="Training R²"
-)
-
-plt.plot(
-    degrees,
-    test_r2,
-    marker="o",
-    linewidth=2,
-    label="Test R²"
-)
-
+plt.plot(degrees, r2_train, "o-", linewidth=2, label="Train R²")
+plt.plot(degrees, r2_test, "o-", linewidth=2, label="Test R²")
 plt.xlabel("Polynomial degree")
 plt.ylabel("R²")
 plt.title("OLS: R² as a function of polynomial degree")
 plt.xticks(degrees)
 plt.legend()
 plt.tight_layout()
-plt.show()
+save_fig("ols_r2")

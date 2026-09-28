@@ -8,11 +8,9 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-from sklearn.model_selection import train_test_split
-
-from src.data import generate_data, design_matrix
+from src.data import generate_data, design_matrix, scale_matrix, center_y, split_data
 from src.models import ols
-from src.metrics import mse
+from src.plotting import save_fig
 
 
 sigma_values = [0.0, 0.05, 0.1, 0.2]
@@ -26,53 +24,27 @@ for sigma in sigma_values:
     errors = np.zeros((n_reps, len(degrees)))
 
     for rep in range(n_reps):
-        x, y, y_true = generate_data(
-            n=n,
-            sigma=sigma,
-            seed=rep
-        )
+        x, y, y_true = generate_data(n=n, sigma=sigma, seed=rep)
+        x_train, x_test, y_train, y_test = split_data(x, y, seed=rep)
+        y_train_c, y_mean = center_y(y_train)
 
-        x_train, x_test, y_train, y_test = train_test_split(
-            x,
-            y,
-            test_size=0.2,
-            random_state=rep
-        )
+        for i, d in enumerate(degrees):
+            X_train = design_matrix(x_train, d)
+            X_test = design_matrix(x_test, d)
+            X_train_s, X_test_s = scale_matrix(X_train, X_test)
 
-        for i, degree in enumerate(degrees):
-            X_train = design_matrix(x_train, degree)
-            X_test = design_matrix(x_test, degree)
+            theta = ols(X_train_s, y_train_c)
+            y_pred = X_test_s @ theta + y_mean
 
-            mean_X = np.mean(X_train[:, 1:], axis=0)
-
-            X_train[:, 1:] = X_train[:, 1:] - mean_X
-            X_test[:, 1:] = X_test[:, 1:] - mean_X
-
-            theta = ols(X_train, y_train)
-
-            y_test_pred = X_test @ theta
-
-            errors[rep, i] = mse(y_test, y_test_pred)
+            residuals = y_test - y_pred
+            errors[rep, i] = np.mean(residuals**2)
 
     median_mse = np.median(errors, axis=0)
     q25 = np.percentile(errors, 25, axis=0)
     q75 = np.percentile(errors, 75, axis=0)
 
-    line, = plt.plot(
-        degrees,
-        median_mse,
-        marker="o",
-        linewidth=2,
-        label=f"sigma = {sigma}"
-    )
-
-    plt.fill_between(
-        degrees,
-        q25,
-        q75,
-        alpha=0.15,
-        color=line.get_color()
-    )
+    line, = plt.plot(degrees, median_mse, "o-", linewidth=2, label=f"sigma = {sigma}")
+    plt.fill_between(degrees, q25, q75, alpha=0.15, color=line.get_color())
 
 plt.xlabel("Polynomial degree")
 plt.ylabel("Test MSE")
@@ -81,4 +53,4 @@ plt.xticks(degrees)
 plt.yscale("log")
 plt.legend()
 plt.tight_layout()
-plt.show()
+save_fig("ols_noise")
