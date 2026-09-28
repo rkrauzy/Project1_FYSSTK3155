@@ -5,6 +5,7 @@ from src.data import generate_data, design_matrix
 from src.models import ols
 from src.gradient_descent import ols_gradient
 from src.optimiser import optimise_optax
+from src.plotting import save_fig
 
 n = 100
 degree = 5
@@ -121,6 +122,7 @@ def plot_final_error(results):
     plt.grid(True)
 
     plt.show()
+    save_fig("Learning_rate_optax_methods")
 
 def print_results(results):
     """
