@@ -8,57 +8,36 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-from sklearn.model_selection import train_test_split
+from src.data import generate_data, design_matrix, scale_matrix, split_data
+from src.plotting import save_fig
 
-from src.data import generate_data, design_matrix
 
-
-x, y, y_true = generate_data(n=100, sigma=0.1, seed=42)
-
-x_train, x_test, y_train, y_test = train_test_split(
-    x,
-    y,
-    test_size=0.2,
-    random_state=42
-)
+x, y, y_true = generate_data(n=100, sigma=0.1)
+x_train, x_test, y_train, y_test = split_data(x, y)
 
 degree = 15
 lambdas = [1e-6, 1e-4, 1e-2, 1, 100]
 
 X_train = design_matrix(x_train, degree)
+X_train_s = scale_matrix(X_train)
 
-mean_X = np.mean(X_train[:, 1:], axis=0)
-X_train[:, 1:] = X_train[:, 1:] - mean_X
-
-X_features = X_train[:, 1:]
-
-singular_values = np.linalg.svd(
-    X_features,
-    compute_uv=False
-)
-
+n_train = len(y_train)
+singular_values = np.linalg.svd(X_train_s, compute_uv=False)
 mode_numbers = np.arange(1, len(singular_values) + 1)
 
 plt.figure(figsize=(9, 6))
 
-for lmbda in lambdas:
-    shrinkage = singular_values**2 / (
-        singular_values**2 + lmbda
-    )
+for lmb in lambdas:
+    # Convention B: closed form uses (X^TX + n*lambda*I), so shrinkage is s²/(s² + n*lambda)
+    shrinkage = singular_values**2 / (singular_values**2 + n_train * lmb)
 
-    plt.plot(
-        mode_numbers,
-        shrinkage,
-        marker="o",
-        linewidth=2,
-        label=f"lambda = {lmbda:g}"
-    )
+    plt.plot(mode_numbers, shrinkage, "o-", linewidth=2, label=f"λ={lmb:g}")
 
 plt.xlabel("Singular-value mode")
-plt.ylabel("Shrinkage factor")
+plt.ylabel("Shrinkage factor  s²/(s² + n·λ)")
 plt.title("Ridge: Shrinkage of singular-value modes")
 plt.xticks(mode_numbers)
 plt.ylim(-0.05, 1.05)
 plt.legend()
 plt.tight_layout()
-plt.show()
+save_fig("ridge_singular_values")
