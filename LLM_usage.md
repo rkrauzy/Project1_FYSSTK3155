@@ -199,6 +199,19 @@ The implementations of mean squared error and \(R^2\) were written independently
 **Verification:** Reviewed, executed and interpreted by the project authors.
 
 ---
+## Part D
+
+### `parts/part_d/cv_ols.py`
+
+**Tool:** Claude, Opus 5.5 (Anthropic, September 2026)
+
+**LLM level:** 3 - Skeleton
+
+**Contribution:** The cross-validation code follows Step 4 of Case 2 in the week 36 Tuesday notebook (`week36tuesday.ipynb`), using `KFold` and `cross_val_score`. Claude assisted with adapting it to the repository structure: using `design_matrix` from `src/data.py`, placing `StandardScaler` inside the pipeline so that scaling is fitted on the training folds only, and using `LinearRegression` with an intercept since the design matrix has no intercept column. Claude also assisted with running the analysis for both $k = 5$ and $k = 10$ and with plotting the cross-validated MSE together with the bootstrap error from Part C in one figure for comparison.
+
+**Verification:** Reviewed, executed and interpreted by the project authors.
+
+---
 
 ## Part E
 
