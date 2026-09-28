@@ -5,6 +5,7 @@ from src.data import generate_data, design_matrix
 from src.models import ols, ridge
 from src.gradient_descent import ols_gradient, ridge_gradient
 from src.optimiser import optimise_optax
+from src.plotting import save_fig
 
 n = 100
 Degree = 5
@@ -161,6 +162,7 @@ def plot_convergence(results, title):
     plt.grid(True)
 
     plt.show()
+    save_fig("convergence_optax_methods")
 
 def print_results(results):
     """
