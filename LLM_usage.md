@@ -188,6 +188,16 @@ The implementations of mean squared error and \(R^2\) were written independently
 
 **Verification:** Reviewed, executed and interpreted by the project authors. The averaged results were compared with single split results to confirm that the difference is due to the variance of the test MSE for small test sets.
 
+### `parts/part_c/bias_variance.py`
+
+**Tool:** Claude, Opus 5.5 (Anthropic, September 2026)
+
+**LLM level:** 3 - Skeleton
+
+**Contribution:** Claude assisted with the overall structure of the bias-variance analysis using the shared `bootstrap` function, including the comparison of $n = 40$, $100$ and $400$ in one figure and the reference line for the noise variance $\sigma^2$. The structure follows Steps 2 and 3 of the week 36 Tuesday notebook (week36tuesday.ipynb)
+
+**Verification:** Reviewed, executed and interpreted by the project authors.
+
 ---
 
 ## Part E
