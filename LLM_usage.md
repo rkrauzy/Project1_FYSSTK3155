@@ -40,6 +40,16 @@ The implementations of mean squared error and \(R^2\) were written independently
 
 **Verification:** The implementation was reviewed and executed by the project authors. The analytical gradients were compared with JAX automatic differentiation to machine precision, and the resulting gradient descent solutions were compared with the closed-form OLS and Ridge solutions.
 
+### `src/resampling.py`
+
+**Tool:** Claude, Opus 5.5 (Anthropic, September 2026)
+
+**LLM level:** 2 - Snippet
+
+**Contribution:** The bootstrap function is based on the bootstrap code in the week 36 Tuesday notebook (`week36tuesday.ipynb`). Claude assisted with adapting it to the repository structure: building the design matrix with `design_matrix`, scaling and centering each bootstrap sample with `scale_matrix` and `center_y` since the design matrix has no intercept column, and reshaping `y_test` to a column vector so that the error, bias and variance expressions broadcast correctly. The project authors replaced the least squares solver with their own `ols` function and corrected the indexing of the degree arrays.
+
+**Verification:** Reviewed and executed by the project authors. The bootstrap estimates were checked to satisfy error = bias + variance to machine precision, and the results were compared with the original notebook version.
+
 ---
 
 ## Part A
@@ -163,6 +173,20 @@ The implementations of mean squared error and \(R^2\) were written independently
 **Contribution:** ChatGPT suggested and substantially assisted with an additional robustness analysis of Ridge regression across different sample sizes and noise levels. The suggestion was reviewed and retained by the project authors to strengthen the empirical analysis and compare the results with Part A.
 
 **Verification:** Reviewed, executed and interpreted by the project authors.
+
+---
+
+## Part C
+
+### `parts/part_c/train_test_MSE.py`
+
+**Tool:** Claude, Opus 5.5 (Anthropic, September 2026)
+
+**LLM level:** 4 - Substantial
+
+**Contribution:** Claude substantially assisted with the implementation of the training and test MSE analysis reproducing Fig. 2.11 of Hastie et al. After a single train/test split gave a noisy test MSE, Claude suggested averaging the training and test MSE over 500 data sets with new noise and new splits, in line with Fig. 7.1 of Hastie et al., and presenting the results for $n = 40$, $100$ and $400$ in one figure. The subplot structure follows Step 2 of the week 36 Tuesday notebook. The suggestion was reviewed and retained by the project authors.
+
+**Verification:** Reviewed, executed and interpreted by the project authors. The averaged results were compared with single split results to confirm that the difference is due to the variance of the test MSE for small test sets.
 
 ---
 
