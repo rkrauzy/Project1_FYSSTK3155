@@ -232,7 +232,11 @@ paragraphs from the author's instructions regarding content and length. The
 formulations are Claude's; the content had been established beforehand, and the
 author read, checked and endorsed the result.
 
-**Verification:**
+**Verification:** Both paragraphs were read and checked by the author against
+the derivations in the two preceding subsections and against Sec. 2.10 of the
+lecture notes. The description of what the bootstrap varies was checked against
+the week 36 bootstrap code, where the train/test split is performed once and
+only the training data are resampled.
 
 ---
 
