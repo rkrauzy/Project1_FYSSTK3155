@@ -4,6 +4,20 @@ This file documents the use of large language models in the development of the c
 
 The project authors reviewed, tested and interpreted all submitted code and results. LLM assistance is classified according to the course guidelines using Levels 0--4.
 
+
+### Repository restructuring and fixes
+
+**Tool:** Claude (Claude Code, Anthropic, September 2026)
+
+**LLM level:** 3 - Skeleton
+
+**Contribution:** Parts a), b) and e) were first written as standalone scripts with an intercept column in the design matrix. When the group agreed on a shared repository structure, Claude Code was used to adapt the code to it. In `src/data.py`, the intercept column was removed from `design_matrix`, `scale_matrix` was updated to standardise all columns, `center_y` was added and a global `SEED` constant was defined. In `src/models.py`, `ridge` was updated to the closed-form solution (XᵀX + nλI)⁻¹Xᵀy. In `src/gradient_descent.py`, `ridge_cost` and `ridge_gradient` were updated to regularise all parameters uniformly. In `src/plotting.py`, `dpi=150` and `plt.close()` were added to `save_fig`. The scripts in `parts/part_a/` and `parts/part_b/` were rewritten to import from the shared `src/` modules.
+
+Claude Code was later used to fix the part e) and f) scripts so they match the same structure. In the part e) scripts, the manual centering of `X_train[:, 1:]` was replaced with `scale_matrix`, and `y_train` is centred with `center_y`, as in `resampling.py`. `ridge_cost_jax` now matches `models.ridge`, with the penalty `lmbda * sum(theta**2)` on all coefficients, and `H_ridge` is now (2/n)XᵀX + 2λI, the Hessian of that cost. The part f) Optax scripts now use the same seed, `split_data`, `scale_matrix` and `center_y` as part e), so the results are comparable. Figures are saved with `save_fig` instead of `plt.show()`, with separate OLS and Ridge Optax convergence plots. Inaccurate claims about intercept exclusion and a machine-precision check were removed from earlier LLM declarations.
+
+**Verification:** All changes were reviewed and executed by the project authors. The restructured scripts were checked against the original standalone results, the analytical and JAX Ridge gradients were compared to machine precision with `gradient_check.py`, and all part e) and f) figures were regenerated.
+
+
 ## Shared source files
 
 ### `src/data.py`
