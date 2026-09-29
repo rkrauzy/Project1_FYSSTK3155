@@ -1,7 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-from src.data import generate_data, design_matrix
+from src.data import generate_data, design_matrix, scale_matrix, center_y, split_data
 from src.models import ols
 from src.gradient_descent import ols_gradient
 from src.optimiser import optimise_optax
@@ -121,7 +121,6 @@ def plot_final_error(results):
     plt.legend()
     plt.grid(True)
 
-    plt.show()
     save_fig("Learning_rate_optax_methods")
 
 def print_results(results):
@@ -162,12 +161,20 @@ def main():
     x, y, y_true = generate_data(
         n = n,
         sigma = 0.1,
+        seed = 42,
     )
 
-    X = design_matrix(
+    x_train, x_test, y_train, y_test = split_data(
         x,
-        degree = degree,
+        y,
+        seed = 42,
     )
+
+    X = scale_matrix(design_matrix(
+        x_train,
+        degree = degree,
+    ))
+    y, y_mean = center_y(y_train)
 
     results = run_sensitivity(
         X,

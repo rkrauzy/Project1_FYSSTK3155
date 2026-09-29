@@ -4,7 +4,7 @@
 # Role: Substantially assisted with the implementation of the gradient
 # verification using JAX automatic differentiation for OLS and Ridge.
 # Verification: Reviewed and executed by the project authors, with analytical
-# and automatic gradients compared numerically to machine precision.
+# and automatic gradients compared numerically.
 
 import numpy as np
 import jax
@@ -12,7 +12,7 @@ import jax.numpy as jnp
 
 from sklearn.model_selection import train_test_split
 
-from src.data import generate_data, design_matrix
+from src.data import generate_data, design_matrix, scale_matrix, center_y
 from src.gradient_descent import ols_gradient, ridge_gradient
 
 
@@ -31,10 +31,8 @@ x_train, x_test, y_train, y_test = train_test_split(
 degree = 10
 lmbda = 0.01
 
-X_train = design_matrix(x_train, degree)
-
-mean_X = np.mean(X_train[:, 1:], axis=0)
-X_train[:, 1:] = X_train[:, 1:] - mean_X
+X_train = scale_matrix(design_matrix(x_train, degree))
+y_train, y_mean = center_y(y_train)
 
 theta = np.linspace(-0.5, 0.5, X_train.shape[1])
 
@@ -67,17 +65,11 @@ def ridge_cost_jax(theta):
     ------------
     Tool: ChatGPT, GPT-5.6 Sol (OpenAI, September 2026)
     Level: 4 - Substantial
-    Role: Assisted with the JAX-compatible Ridge cost implementation,
-    including exclusion of the intercept from regularization.
+    Role: Assisted with the JAX-compatible Ridge cost implementation.
     Verification: Compared against the independently implemented analytical
     Ridge gradient by the project authors.
     """
-    penalty = jnp.sum(theta[1:] ** 2)
-
-    return (
-        jnp.mean((X_jax @ theta - y_jax) ** 2)
-        + lmbda * penalty / len(y_train)
-    )
+    return jnp.mean((X_jax @ theta - y_jax) ** 2) + lmbda * jnp.sum(theta ** 2)
 
 
 ols_analytic = ols_gradient(

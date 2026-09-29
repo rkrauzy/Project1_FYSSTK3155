@@ -11,8 +11,9 @@ import matplotlib.pyplot as plt
 
 from sklearn.model_selection import train_test_split
 
-from src.data import generate_data, design_matrix
+from src.data import generate_data, design_matrix, scale_matrix, center_y
 from src.models import ols, ridge
+from src.plotting import save_fig
 from src.gradient_descent import (
     gradient_descent,
     ols_gradient,
@@ -32,22 +33,15 @@ degree = 5
 lmbda = 0.01
 n_iterations = 500
 
-X_train = design_matrix(x_train, degree)
-
-mean_X = np.mean(X_train[:, 1:], axis=0)
-X_train[:, 1:] = X_train[:, 1:] - mean_X
+X_train = scale_matrix(design_matrix(x_train, degree))
+y_train, y_mean = center_y(y_train)
 
 theta_ols = ols(X_train, y_train)
 theta_ridge = ridge(X_train, y_train, lmbda)
 
 H_ols = (2 / len(y_train)) * X_train.T @ X_train
 
-I = np.eye(X_train.shape[1])
-I[0, 0] = 0
-
-H_ridge = (2 / len(y_train)) * (
-    X_train.T @ X_train + lmbda * I
-)
+H_ridge = (2 / len(y_train)) * X_train.T @ X_train + 2 * lmbda * np.eye(X_train.shape[1])
 
 eta_max_ols = 2 / np.max(np.linalg.eigvalsh(H_ols))
 eta_max_ridge = 2 / np.max(np.linalg.eigvalsh(H_ridge))
@@ -87,7 +81,7 @@ plt.ylabel("Distance to closed-form solution")
 plt.title("OLS: Effect of learning rate")
 plt.legend()
 plt.tight_layout()
-plt.show()
+save_fig("gd_learning_rate_ols")
 
 
 plt.figure(figsize=(9, 6))
@@ -124,7 +118,7 @@ plt.ylabel("Distance to closed-form solution")
 plt.title("Ridge: Effect of learning rate")
 plt.legend()
 plt.tight_layout()
-plt.show()
+save_fig("gd_learning_rate_ridge")
 
 print("OLS eta_max:")
 print(eta_max_ols)
