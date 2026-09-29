@@ -8,11 +8,12 @@ from src.plotting import save_fig
 max_degree, n_bootstraps, sigma = 20, 100, 0.1
 polydegree = np.arange(1, max_degree + 1)
 
-np.random.seed(2026)
+
 fig, axes = plt.subplots(1, 3, figsize=(15, 4.5))
 for ax, n in zip(axes, (40, 100, 400)):
     x, y, y_true = generate_data(n, sigma=sigma)
     x_train, x_test, y_train, y_test = split_data(x, y)
+    np.random.seed(2026)
     error, bias, variance = bootstrap(x_train, x_test, y_train, y_test, max_degree, n_bootstraps)
 
     print(f"n = {n}: minimum error {error.min():.4f} at degree {np.argmin(error) + 1}")
