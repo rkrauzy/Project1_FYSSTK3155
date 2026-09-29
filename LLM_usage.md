@@ -40,6 +40,16 @@ The implementations of mean squared error and \(R^2\) were written independently
 
 **Verification:** The implementation was reviewed and executed by the project authors. The analytical gradients were compared with JAX automatic differentiation to machine precision, and the resulting gradient descent solutions were compared with the closed-form OLS and Ridge solutions.
 
+### `src/resampling.py`
+
+**Tool:** Claude, Opus 5.5 (Anthropic, September 2026)
+
+**LLM level:** 2 - Snippet
+
+**Contribution:** The bootstrap function is based on the bootstrap code in the week 36 Tuesday notebook (`week36tuesday.ipynb`). Claude assisted with adapting it to the repository structure: building the design matrix with `design_matrix`, scaling and centering each bootstrap sample with `scale_matrix` and `center_y` since the design matrix has no intercept column, and reshaping `y_test` to a column vector so that the error, bias and variance expressions broadcast correctly. The project authors replaced the least squares solver with their own `ols` function and corrected the indexing of the degree arrays.
+
+**Verification:** Reviewed and executed by the project authors. The bootstrap estimates were checked to satisfy error = bias + variance to machine precision, and the results were compared with the original notebook version.
+
 ---
 
 ## Part A
@@ -163,6 +173,70 @@ The implementations of mean squared error and \(R^2\) were written independently
 **Contribution:** ChatGPT suggested and substantially assisted with an additional robustness analysis of Ridge regression across different sample sizes and noise levels. The suggestion was reviewed and retained by the project authors to strengthen the empirical analysis and compare the results with Part A.
 
 **Verification:** Reviewed, executed and interpreted by the project authors.
+
+---
+
+## Part C
+
+### `parts/part_c/train_test_MSE.py`
+
+**Tool:** Claude, Opus 5.5 (Anthropic, September 2026)
+
+**LLM level:** 4 - Substantial
+
+**Contribution:** Claude substantially assisted with the implementation of the training and test MSE analysis reproducing Fig. 2.11 of Hastie et al. After a single train/test split gave a noisy test MSE, Claude suggested averaging the training and test MSE over 500 data sets with new noise and new splits, in line with Fig. 7.1 of Hastie et al., and presenting the results for $n = 40$, $100$ and $400$ in one figure. The subplot structure follows Step 2 of the week 36 Tuesday notebook. The suggestion was reviewed and retained by the project authors.
+
+**Verification:** Reviewed, executed and interpreted by the project authors. The averaged results were compared with single split results to confirm that the difference is due to the variance of the test MSE for small test sets.
+
+### `parts/part_c/bias_variance.py`
+
+**Tool:** Claude, Opus 5.5 (Anthropic, September 2026)
+
+**LLM level:** 3 - Skeleton
+
+**Contribution:** Claude assisted with the overall structure of the bias-variance analysis using the shared `bootstrap` function, including the comparison of $n = 40$, $100$ and $400$ in one figure and the reference line for the noise variance $\sigma^2$. The structure follows Steps 2 and 3 of the week 36 Tuesday notebook (week36tuesday.ipynb)
+
+**Verification:** Reviewed, executed and interpreted by the project authors.
+
+---
+## Part D
+
+### `parts/part_d/cv_ols.py`
+
+**Tool:** Claude, Opus 5.5 (Anthropic, September 2026)
+
+**LLM level:** 3 - Skeleton
+
+**Contribution:** The cross-validation code follows Step 4 of Case 2 in the week 36 Tuesday notebook (`week36tuesday.ipynb`), using `KFold` and `cross_val_score`. Claude assisted with adapting it to the repository structure: using `design_matrix` from `src/data.py`, placing `StandardScaler` inside the pipeline so that scaling is fitted on the training folds only, and using `LinearRegression` with an intercept since the design matrix has no intercept column. Claude also assisted with running the analysis for both $k = 5$ and $k = 10$ and with plotting the cross-validated MSE together with the bootstrap error from Part C in one figure for comparison.
+
+**Verification:** Reviewed, executed and interpreted by the project authors.
+
+---
+
+### `parts/part_d/cv_ridge.py`
+
+**Tool:** Claude, Claude Opus 5.5 (Anthropic, September 2026)
+
+**LLM level:** 3 - Skeleton
+
+**Contribution:** The cross-validation code follows Steps 2 and 3 of Case 2 in the week 36 Tuesday notebook (`week36tuesday.ipynb`), where the cross-validated MSE for Ridge is computed with `KFold` and `cross_val_score` for a fixed polynomial degree. Claude assisted with extending this to a grid over both polynomial degree and $\lambda$ by adding an outer loop over the degree, with adapting it to the repository structure (`design_matrix` from `src/data.py`, `StandardScaler` inside the pipeline so that scaling is fitted on the training folds only), and with choosing a range of $\lambda$ suited to the scale of the Runge data. Claude also suggested presenting the resulting grid as heatmaps for $k = 5$ and $k = 10$, and assisted with the interpretation of the results.
+    
+Also Claude spotted minor inconsistency and fixed it: Since in cv_own_vc_sklearn.py
+we use ridge from src.models/ which uses alpha = n * lmbdas we got different scales for lambda. Adjusted for that.   
+
+**Verification:** Reviewed, executed and interpreted by the project authors.
+
+---
+
+### `parts/part_d/cv_own_vs_sklearn.py`
+
+**Tool:** Claude, Claude Opus 5.5 (Anthropic, September 2026)
+
+**LLM level:** 3 - Skeleton
+
+**Contribution:** The script follows Steps 1 and 2 of Case 2 in the week 36 Tuesday notebook (`week36tuesday.ipynb`), where an own $k$-fold loop for Ridge regression is compared with `cross_val_score` using the same `KFold` object. Claude assisted with adapting the own loop to the repository structure, replacing `PolynomialFeatures`, `StandardScaler` and `Ridge` with `design_matrix`, `scale_matrix`, `center_y` and the project's own `ridge` function, and with matching the regularisation convention by using `alpha = n_train * lambda` in `Scikit-Learn`, since the project's `ridge` includes the factor $1/n$ in the cost function. Claude also assisted with the choice of polynomial degree and range of $\lambda$, and with the interpretation of the results.
+
+**Verification:** Reviewed, executed and interpreted by the project authors. The own loop and `cross_val_score` agree to a relative difference of order $10^{-10}$ for all  $\lambdas$.
 
 ---
 
