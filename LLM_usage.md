@@ -62,6 +62,8 @@ The implementations of mean squared error and \(R^2\) were written independently
 
 **Contribution:** The bootstrap function is based on the bootstrap code in the week 36 Tuesday notebook (`week36tuesday.ipynb`). Claude assisted with adapting it to the repository structure: building the design matrix with `design_matrix`, scaling and centering each bootstrap sample with `scale_matrix` and `center_y` since the design matrix has no intercept column, and reshaping `y_test` to a column vector so that the error, bias and variance expressions broadcast correctly. The project authors replaced the least squares solver with their own `ols` function and corrected the indexing of the degree arrays.
 
+For part i), Claude also assisted with `bootstrap_lambda`, a copy of `bootstrap` with the loop over the polynomial degree replaced by a loop over λ at a fixed degree, using `ridge` or `lasso_fit` from `src/models.py` in place of `ols`, and with the seed reset for every λ so that all values of λ use the same bootstrap samples.
+
 **Verification:** Reviewed and executed by the project authors. The bootstrap estimates were checked to satisfy error = bias + variance to machine precision, and the results were compared with the original notebook version.
 
 ---
@@ -367,3 +369,15 @@ we use ridge from src.models/ which uses alpha = n * lmbdas we got different sca
 **Contribution:** The script is a copy of `parts/part_d/cv_ridge.py` with Ridge replaced by Lasso. Claude assisted with the changes this required: `alpha = λ/2`, since `Scikit-Learn`'s Lasso divides the squared error by $2n$ (as in `lasso_fit` in Chapter 3 of the lecture notes); `max_iter = 100000`, as in the lecture notes; a λ grid from $10^{-6}$ to $1$, chosen so that it contains the cross-validation minimum and ends above $\lambda_{\max} = (2/n)\|X^T y\|_\infty \approx 0.46$, where every coefficient is zero (Proposition 3.8 in the lecture notes); and `n_jobs=-1` in `cross_val_score`, so that the folds run in parallel.
 
 **Verification:** Reviewed and executed by the project authors. The cross-validation minimum lies inside the λ grid, at degree 12 for both $k = 5$ and $k = 10$, and for λ above $\lambda_{\max}$ the cross-validated MSE is the same for every degree, since the model predicts the mean.
+
+---
+
+### `parts/part_i/bias_variance_lambda.py`
+
+**Tool:** Claude, Opus 5.5 (Anthropic, September 2026)
+
+**LLM level:** 3 - Skeleton
+
+**Contribution:** The script estimates the bias-variance decomposition of the test error for Ridge and Lasso as a function of λ at the fixed polynomial degree 12, with the bootstrap. It is an adaptation of `parts/part_c/bias_variance.py`, with λ on the x-axis instead of the degree, one panel for Ridge and one for Lasso, and the OLS error at the same degree as a reference line. The idea of turning λ at a fixed high degree follows Case 1, Step 4 of the week 36 Tuesday notebook (`week36tuesday.ipynb`). Claude assisted with the adaptation, and suggested using the same bootstrap samples for every λ, since the curves were otherwise dominated by the noise from different samples at small λ.
+
+**Verification:** Reviewed and executed by the project authors. Error = bias$^2$ + variance to machine precision for both methods, and at the smallest λ the Lasso error approaches the OLS error at degree 12.
