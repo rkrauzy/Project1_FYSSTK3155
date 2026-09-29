@@ -66,6 +66,18 @@ The implementations of mean squared error and \(R^2\) were written independently
 
 ---
 
+### `src/optimiser.py`
+
+**Tool:** Claude, Opus 5.5 (Anthropic, September 2026)
+
+**LLM level:** 2 - Snippet
+
+**Contribution:** The functions `optimiser_step`, `make_batches`, `step_length` and `sgd` are our own code from the week 38 exercises (`week38.ipynb`, Exercises 2 and 4), which follow the section Implementations in Chapter 4 of the lecture notes. Claude assisted with moving them to `src/optimiser.py` so they can be reused in parts h) and i), and with adapting `sgd` to the repository structure: the notebook's gradient function was replaced by `ridge_gradient` or `lasso_gradient` from `src/gradient_descent.py`, chosen by the arguments `lmbda` and `lasso`, and the default seed was set to `SEED` from `src/data.py`. The function `optimise_optax` is not covered by this entry.
+
+**Verification:** Reviewed and executed by the project authors. With `method="plain"` and a batch size equal to the number of training points, `sgd` reproduces the closed-form OLS and Ridge solutions to $10^{-14}$.
+
+---
+
 ## Part A
 
 ### `parts/part_a/baseline.py`
