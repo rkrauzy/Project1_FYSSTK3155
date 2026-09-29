@@ -10,23 +10,16 @@ import numpy as np
 import jax
 import jax.numpy as jnp
 
-from sklearn.model_selection import train_test_split
-
-from src.data import generate_data, design_matrix, scale_matrix, center_y
+from src.data import generate_data, design_matrix, scale_matrix, center_y, split_data
 from src.gradient_descent import ols_gradient, ridge_gradient
 
 
 jax.config.update("jax_enable_x64", True)
 
 
-x, y, y_true = generate_data(n=100, sigma=0.1, seed=42)
+x, y, y_true = generate_data(n=100, sigma=0.1)
 
-x_train, x_test, y_train, y_test = train_test_split(
-    x,
-    y,
-    test_size=0.2,
-    random_state=42
-)
+x_train, x_test, y_train, y_test = split_data(x, y)
 
 degree = 10
 lmbda = 0.01

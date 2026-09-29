@@ -118,7 +118,7 @@ def plot_final_error(results):
     plt.xlabel("Initial learning rate")
     plt.ylabel("Final relative error")
     plt.title("Sensitivity to initial learning rate")
-    plt.legend()
+    plt.legend(loc="center left", bbox_to_anchor=(1, 0.5))
     plt.grid(True)
 
     save_fig("Learning_rate_optax_methods")
