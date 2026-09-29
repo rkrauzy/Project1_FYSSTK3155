@@ -381,3 +381,15 @@ we use ridge from src.models/ which uses alpha = n * lmbdas we got different sca
 **Contribution:** The script estimates the bias-variance decomposition of the test error for Ridge and Lasso as a function of λ at the fixed polynomial degree 12, with the bootstrap. It is an adaptation of `parts/part_c/bias_variance.py`, with λ on the x-axis instead of the degree, one panel for Ridge and one for Lasso, and the OLS error at the same degree as a reference line. The idea of turning λ at a fixed high degree follows Case 1, Step 4 of the week 36 Tuesday notebook (`week36tuesday.ipynb`). Claude assisted with the adaptation, and suggested using the same bootstrap samples for every λ, since the curves were otherwise dominated by the noise from different samples at small λ.
 
 **Verification:** Reviewed and executed by the project authors. Error = bias$^2$ + variance to machine precision for both methods, and at the smallest λ the Lasso error approaches the OLS error at degree 12.
+
+---
+
+### `parts/part_i/model_selection.py`
+
+**Tool:** Claude, Opus 5.5 (Anthropic, September 2026)
+
+**LLM level:** 3 - Skeleton
+
+**Contribution:** The script compares OLS, Ridge and Lasso at degree 12, the degree selected by cross-validation for all three methods, using the 5-fold cross-validated MSE with its standard error. It follows Case 2, Steps 5 and 6 of the week 36 Tuesday notebook (`week36tuesday.ipynb`): the functions `cv_curve` and `select`, which give the standard error over the folds and the one-standard-error choice of λ, are copied from Step 5 and adapted to our design matrix, and the figure is a simplified version of the comparison of Ridge and Lasso in Step 6, including the number of non-zero Lasso coefficients. The models and λ grids are the same as in `parts/part_d/cv_ols.py`, `parts/part_d/cv_ridge.py` and `parts/part_i/cv_lasso.py`. Claude assisted with assembling the script, and suggested the standard-error band for OLS and the markers for the minimum-CV and one-standard-error choices of λ in the figure.
+
+**Verification:** Reviewed and executed by the project authors. The minimum cross-validated errors for OLS, Ridge and Lasso at degree 12 agree with those from `cv_ols.py`, `cv_ridge.py` and `cv_lasso.py` for $k = 5$.
