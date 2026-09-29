@@ -29,6 +29,11 @@ def ridge_cost(X, y, theta, lmbda):
     return np.mean((X @ theta - y) ** 2) + lmbda * np.sum(theta ** 2)
 
 
+def lasso_cost(X, y, theta, lmbda):
+    
+    return np.mean((X @ theta - y) ** 2) + lmbda * np.sum(np.abs(theta))
+
+
 def ols_gradient(X, y, theta):
     """
     Compute the analytical gradient of the OLS cost.
@@ -61,6 +66,11 @@ def ridge_gradient(X, y, theta, lmbda):
     n = len(y)
 
     return (2 / n) * X.T @ (X @ theta - y) + 2 * lmbda * theta
+
+
+def lasso_gradient(X, y, theta, lmbda):
+    n = len(y)
+    return (2 / n) * X.T @ (X @ theta - y) + lmbda * np.sign(theta)
 
 
 def gradient_descent(
