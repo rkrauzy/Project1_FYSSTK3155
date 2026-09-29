@@ -166,6 +166,76 @@ The implementations of mean squared error and \(R^2\) were written independently
 
 ---
 
+## Part C
+
+### notebooks/partc_theory.ipynb
+#### Derivation of bias variance
+
+**Tool:** Claude Sonnet 5.5 and Opus 5 (Anthropic), September 2026
+
+**LLM level:** 2 - Editorial and 3 — Generative
+
+**Contribution:** 
+
+Level 2: The derivation itself (the decomposition into A, B, C, the
+treatment of each expectation value, and the vanishing of the cross terms) was
+dictated step by step by the author; Claude converted it to LaTeX and corrected
+two sign errors in the process. Claude also proposed the overall structure of the section
+(assumptions first, interpretation last).
+
+Level 3: For the final step (going from a single test point to the average over all $n$ points, and matching the notation of the exercise), Claude first checked the author's single-point derivation (no errors found). The author noticed that his left-hand side, $\frac1n\sum_i\mathbb E[(y_i-\tilde y_i)^2]$, did not match the exercise's, $\frac1n\sum_i(y_i-\tilde y_i)^2=\mathbb E[(\boldsymbol y-\tilde{\boldsymbol y})^2]$. Claude explained that the exercise uses $\mathbb E$ both as a sample average and as an expectation over the training set $\mathcal L$ and the noise $\boldsymbol\varepsilon$, and drafted the paragraph that resolves this: the cost $C$ is a random variable, the decomposition concerns $\mathbb E_{\mathcal L,\varepsilon}[C]$ (by linearity), and $\mathbb E[\tilde{\boldsymbol y}]$ is the vector of per-point means over training sets. Claude also wrote the LaTeX of the closing equations (rewriting the result as $\mathrm{Bias}^2[\tilde{\boldsymbol y}]+\mathrm{var}[\tilde{\boldsymbol y}]+\sigma^2$) and the remark on how the expectations are estimated in practice (bootstrap). The author compared this with his own derivation and the exercise text before including it.
+
+**Verification:** The author checked every step against Eqs. (2.49)–(2.52) of
+the lecture notes, including the two corrected sign errors, and confirmed that
+each assumption used to eliminate the cross terms is stated explicitly in the
+opening paragraph.
+
+#### Absorbtion of the noise variance
+
+**Tool:** Claude Sonnet 5.5 (Anthropic), September 2026
+
+**LLM level:** 2 - Editorial
+
+**Contribution:** The approach was proposed by the author: rather than proving
+the result separately, the noise term $\varepsilon_0$ is regrouped with $f_0$ in
+the decomposition already derived above, so that $(f_0 + \varepsilon_0) = y_0$
+and the same expansion can be reused with two terms $a$ and $b$ instead of
+three. The author dictated the accompanying text and every step of the
+derivation, including the evaluation of $\mathbb{E}[a^2]$, $\mathbb{E}[b^2]$ and
+the vanishing of $\mathbb{E}[2ab]$. Claude converted the dictation to LaTeX and
+corrected three errors in it: two sign errors in the expansion of
+$\mathbb{E}[a^2]$ and a missing expectation operator on the right-hand side of the
+first line.
+
+**Verification:** Since this derivation is a regrouping of the one in the
+preceding subsection, the author checked that the two agree term by term. The
+result $\mathbb{E}[a^2] = (f_0-\mu_0)^2 + \sigma^2$ matches the statement in
+the project description that the measured bias absorbs the noise variance.
+
+#### Interpretation of the tree terms
+
+**Tool:** Claude Sonnet5.5 (Anthropic), September 2026
+
+**LLM level:** 3 - Generative
+
+**Contribution:** The substance of this subsection was settled through extended
+discussion between the author and Claude before any text was written. In the
+course of that discussion the author worked through the interpretation of the
+three terms and the distinction between the randomness appearing in the
+derivation and the randomness the bootstrap actually realises. The author also
+identified that the lecture notes use $\mathbb{E}$ for two different operations
+— the average over test points in Eq. (2.50) and the expectation over training
+sets in Eq. (2.52) — and revised his own earlier week 36 solution, in which the
+bootstrap identity error $=$ bias $+$ variance had been described as an
+inequality rather than as an exact algebraic identity. Claude then drafted both
+paragraphs from the author's instructions regarding content and length. The
+formulations are Claude's; the content had been established beforehand, and the
+author read, checked and endorsed the result.
+
+**Verification:**
+
+---
+
 ## Part E
 
 ### `parts/part_e/gradient_check.py`
@@ -213,3 +283,4 @@ The implementations of mean squared error and \(R^2\) were written independently
 **Contribution:** ChatGPT substantially assisted with the implementation of gradient descent using both analytical gradients and JAX automatic differentiation for OLS and Ridge, including convergence comparisons with closed-form solutions.
 
 **Verification:** Reviewed and executed by the project authors, with analytical and JAX-based results compared numerically and visually.
+
