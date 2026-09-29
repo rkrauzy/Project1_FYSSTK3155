@@ -1,3 +1,18 @@
+"""
+Bias-variance decomposition of the OLS test error as a function of polynomial
+degree, estimated with the bootstrap, for n = 40, 100 and 400.
+
+LLM-assisted
+------------
+Tool: Claude, Opus 5.5 (Anthropic, September 2026)
+Level: 3 - Skeleton
+Role: Assisted with the overall structure of the analysis using the shared
+    bootstrap function, the comparison of several n in one figure and the
+    reference line for sigma^2. The structure follows Steps 2 and 3 of
+    week36tuesday.
+Verification: 
+    Reviewed, executed and interpreted by the project authors.
+"""
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -32,5 +47,3 @@ axes[0].legend()
 fig.suptitle("Bias-variance tradeoff for OLS with bootstrap")
 plt.tight_layout()
 save_fig("bias_variance_tradeoff")
-
-# FIGURTEKST: Viktig her, ulik skala på aksene. 

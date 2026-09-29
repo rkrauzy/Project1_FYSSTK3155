@@ -1,3 +1,21 @@
+"""
+Training and test MSE for OLS as functions of polynomial degree, averaged
+over 500 data sets, for n = 40, 100 and 400 (similar to Fig. 2.11 of
+Hastie et al.).
+
+LLM-assisted
+------------
+Tool: Claude, Opus 5.5 (Anthropic, September 2026)
+Level: 4 - Substantial
+Role: Substantially assisted with the implementation. After a single split
+    gave a noisy test MSE, suggested averaging the training and test MSE over
+    500 data sets with new noise and new splits, in line with Fig. 7.1 of
+    Hastie et al., and presenting the results for several n in one figure.
+    The subplot structure follows Step 2 of week36tuesday.
+Verification: 
+    Reviewed, executed and interpreted by the project authors.
+"""
+
 import numpy as np
 import matplotlib.pyplot as plt
 
