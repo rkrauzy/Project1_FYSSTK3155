@@ -341,3 +341,15 @@ we use ridge from src.models/ which uses alpha = n * lmbdas we got different sca
 **Contribution:** The script compares plain gradient descent, momentum, AdaGrad, RMSprop and Adam with and without stochastic gradient descent for OLS and Ridge, using our own `sgd` from `src/optimiser.py`. It follows the week 38 Tuesday notebook (`week38tuesday.ipynb`): the full-batch learning rates are taken from Case 1, Step 3, and the SGD learning rates and the printout of the distance to the closed-form solution from Case 2, Step 5. Claude assisted with assembling the script, and suggested running full batch and SGD in the same loop so that they are compared after the same number of single-point gradient evaluations, using 1000 epochs so that full-batch gradient descent has time to converge, and timing each run with `time.perf_counter`.
 
 **Verification:** Reviewed and executed by the project authors. Full-batch momentum reaches the closed-form OLS and Ridge solutions to $10^{-15}$, and momentum with $M = 5$ at $\gamma = 0.05$ diverges, as it did on the degree-5 exercise data in Case 2, Step 5 of the notebook.
+
+---
+
+### `parts/part_h/sgd_study.py`
+
+**Tool:** Claude, Opus 5.5 (Anthropic, September 2026)
+
+**LLM level:** 3 - Skeleton
+
+**Contribution:** The script studies plain SGD for OLS as a function of the minibatch size, the number of epochs and the learning-rate schedule, using our own `sgd` from `src/optimiser.py`. It follows Case 2 of the week 38 Tuesday notebook (`week38tuesday.ipynb`) and Exercise 4 of our week 38 exercises: the batch sizes and the stability limit for $M = 1$ are taken from Step 3, the schedules $\gamma_t = t_0/(t + t_1)$ from Step 4, and the sum of $\gamma_t$ from Exercise 4(c). Claude assisted with assembling the script, and suggested splitting panel (b) of the notebook's `fig_sgd` into one panel for the batch size and one for the schedule, with epochs on the x-axis so that the dependence on the number of epochs can be read directly from the figure.
+
+**Verification:** Reviewed and executed by the project authors. $M = 1$ diverges at $\gamma = 0.1$, above the single-point stability limit of $0.026$, and the schedule $(t_0, t_1) = (1, 10)$ freezes, the same behaviour as on the degree-5 exercise data in Case 2, Steps 3 and 4 of the notebook.
