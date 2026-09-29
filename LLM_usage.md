@@ -225,6 +225,18 @@ The implementations of mean squared error and \(R^2\) were written independently
 
 ---
 
+### `parts/part_d/cv_own_vs_sklearn.py`
+
+**Tool:** Claude, Claude Opus 5.5 (Anthropic, September 2026)
+
+**LLM level:** 3 - Skeleton
+
+**Contribution:** The script follows Steps 1 and 2 of Case 2 in the week 36 Tuesday notebook (`week36tuesday.ipynb`), where an own $k$-fold loop for Ridge regression is compared with `cross_val_score` using the same `KFold` object. Claude assisted with adapting the own loop to the repository structure, replacing `PolynomialFeatures`, `StandardScaler` and `Ridge` with `design_matrix`, `scale_matrix`, `center_y` and the project's own `ridge` function, and with matching the regularisation convention by using `alpha = n_train * lambda` in `Scikit-Learn`, since the project's `ridge` includes the factor $1/n$ in the cost function. Claude also assisted with the choice of polynomial degree and range of $\lambda$, and with the interpretation of the results.
+
+**Verification:** Reviewed, executed and interpreted by the project authors. The own loop and `cross_val_score` agree to a relative difference of order $10^{-10}$ for all  $\lambdas$.
+
+---
+
 ## Part E
 
 ### `parts/part_e/gradient_check.py`
