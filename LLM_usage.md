@@ -301,3 +301,17 @@ we use ridge from src.models/ which uses alpha = n * lmbdas we got different sca
 **Contribution:** ChatGPT substantially assisted with the implementation of gradient descent using both analytical gradients and JAX automatic differentiation for OLS and Ridge, including convergence comparisons with closed-form solutions.
 
 **Verification:** Reviewed and executed by the project authors, with analytical and JAX-based results compared numerically and visually.
+
+---
+
+## Part G
+
+### `parts/part_g/lasso_gd.py`
+
+**Tool:** Claude, Opus 5.5 (Anthropic, September 2026)
+
+**LLM level:** 3 - Skeleton
+
+**Contribution:** The script solves the Lasso problem, Eq. (3.57) in the lecture notes, with the gradient descent methods from parts e) and f), using `lasso_gradient` from `src/gradient_descent.py`. Claude assisted with assembling it from existing code: the gradient check from `parts/part_e/gradient_check.py`, extended to θ = 0 where |θ| is not differentiable; plain gradient descent with η = 1/λ_max of the OLS Hessian from `parts/part_e/convergence.py`; the momentum, AdaGrad, RMSprop and Adam runs with `optimise_optax` from `parts/part_f/convergence_optax.py`; the reference solution from `lasso_fit` in Chapter 3 of the lecture notes, with `alpha = λ/2` since `Scikit-Learn`'s Lasso divides the squared error by $2n$; and the test predictions from `parts/part_d/cv_own_vs_sklearn.py`. Claude also checked that `jax.grad` returns 1 for the derivative of |θ| at zero, while `np.sign` returns 0.
+
+**Verification:** Reviewed and executed by the project authors. The analytical and JAX gradients agree to $10^{-16}$ away from θ = 0 and differ by exactly λ at θ = 0, and all five methods reach a Lasso cost within $2 \cdot 10^{-4}$ of the `Scikit-Learn` solution.
