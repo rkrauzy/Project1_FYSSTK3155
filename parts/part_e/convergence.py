@@ -90,6 +90,21 @@ print()
 print("Ridge final difference:")
 print(np.linalg.norm(theta_gd_ridge - theta_ridge))
 
+tol = 1e-8
+
+relative_error_ols = error_ols / np.linalg.norm(theta_ols)
+relative_error_ridge = error_ridge / np.linalg.norm(theta_ridge)
+
+print()
+
+print("OLS iterations to reach relative error < tol:")
+print(np.argmax(relative_error_ols < tol) + 1)
+
+print()
+
+print("Ridge iterations to reach relative error < tol:")
+print(np.argmax(relative_error_ridge < tol) + 1)
+
 plt.figure(figsize=(9, 6))
 
 plt.semilogy(
