@@ -220,6 +220,9 @@ The implementations of mean squared error and \(R^2\) were written independently
 **LLM level:** 3 - Skeleton
 
 **Contribution:** The cross-validation code follows Steps 2 and 3 of Case 2 in the week 36 Tuesday notebook (`week36tuesday.ipynb`), where the cross-validated MSE for Ridge is computed with `KFold` and `cross_val_score` for a fixed polynomial degree. Claude assisted with extending this to a grid over both polynomial degree and $\lambda$ by adding an outer loop over the degree, with adapting it to the repository structure (`design_matrix` from `src/data.py`, `StandardScaler` inside the pipeline so that scaling is fitted on the training folds only), and with choosing a range of $\lambda$ suited to the scale of the Runge data. Claude also suggested presenting the resulting grid as heatmaps for $k = 5$ and $k = 10$, and assisted with the interpretation of the results.
+    
+Also Claude spotted minor inconsistency and fixed it: Since in cv_own_vc_sklearn.py
+we use ridge from src.models/ which uses alpha = n * lmbdas we got different scales for lambda. Adjusted for that.   
 
 **Verification:** Reviewed, executed and interpreted by the project authors.
 
