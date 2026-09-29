@@ -161,13 +161,11 @@ def main():
     x, y, y_true = generate_data(
         n = n,
         sigma = 0.1,
-        seed = 42,
     )
 
     x_train, x_test, y_train, y_test = split_data(
         x,
         y,
-        seed = 42,
     )
 
     X = scale_matrix(design_matrix(
