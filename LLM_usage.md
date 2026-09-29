@@ -327,3 +327,17 @@ we use ridge from src.models/ which uses alpha = n * lmbdas we got different sca
 **Contribution:** The script solves the Lasso problem, Eq. (3.57) in the lecture notes, with the gradient descent methods from parts e) and f), using `lasso_gradient` from `src/gradient_descent.py`. Claude assisted with assembling it from existing code: the gradient check from `parts/part_e/gradient_check.py`, extended to θ = 0 where |θ| is not differentiable; plain gradient descent with η = 1/λ_max of the OLS Hessian from `parts/part_e/convergence.py`; the momentum, AdaGrad, RMSprop and Adam runs with `optimise_optax` from `parts/part_f/convergence_optax.py`; the reference solution from `lasso_fit` in Chapter 3 of the lecture notes, with `alpha = λ/2` since `Scikit-Learn`'s Lasso divides the squared error by $2n$; and the test predictions from `parts/part_d/cv_own_vs_sklearn.py`. Claude also checked that `jax.grad` returns 1 for the derivative of |θ| at zero, while `np.sign` returns 0.
 
 **Verification:** Reviewed and executed by the project authors. The analytical and JAX gradients agree to $10^{-16}$ away from θ = 0 and differ by exactly λ at θ = 0, and all five methods reach a Lasso cost within $2 \cdot 10^{-4}$ of the `Scikit-Learn` solution.
+
+---
+
+## Part H
+
+### `parts/part_h/sgd_methods.py`
+
+**Tool:** Claude, Opus 5.5 (Anthropic, September 2026)
+
+**LLM level:** 3 - Skeleton
+
+**Contribution:** The script compares plain gradient descent, momentum, AdaGrad, RMSprop and Adam with and without stochastic gradient descent for OLS and Ridge, using our own `sgd` from `src/optimiser.py`. It follows the week 38 Tuesday notebook (`week38tuesday.ipynb`): the full-batch learning rates are taken from Case 1, Step 3, and the SGD learning rates and the printout of the distance to the closed-form solution from Case 2, Step 5. Claude assisted with assembling the script, and suggested running full batch and SGD in the same loop so that they are compared after the same number of single-point gradient evaluations, using 1000 epochs so that full-batch gradient descent has time to converge, and timing each run with `time.perf_counter`.
+
+**Verification:** Reviewed and executed by the project authors. Full-batch momentum reaches the closed-form OLS and Ridge solutions to $10^{-15}$, and momentum with $M = 5$ at $\gamma = 0.05$ diverges, as it did on the degree-5 exercise data in Case 2, Step 5 of the notebook.
