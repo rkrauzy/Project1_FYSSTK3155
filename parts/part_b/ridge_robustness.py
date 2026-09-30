@@ -16,7 +16,7 @@ from src.plotting import save_fig
 
 
 degrees = range(1, 16)
-lmbda = 1e-2
+lmbda = 1e-4
 n_reps = 100
 
 
