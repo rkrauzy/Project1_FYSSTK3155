@@ -49,6 +49,7 @@ for ax, n in zip(axes, (40, 100, 400)):
     ax.set_yscale("log")
     ax.set_title(f"$n = {n}$")
     ax.set_xlabel("Polynomial degree")
+    ax.set_xticks(polydegree[1::2])
 axes[0].set_ylabel("MSE")
 axes[0].legend()
 fig.suptitle("Test and training MSE as a function of model complexity")

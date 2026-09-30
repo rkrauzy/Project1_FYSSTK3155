@@ -57,6 +57,7 @@ ax.plot(polydegree, error, "s-", color=YELLOW, label="bootstrap error")
 
 ax.set_yscale("log")
 ax.set_xlabel("Polynomial degree")
+ax.set_xticks(polydegree[1::2])
 ax.set_ylabel("MSE")
 ax.legend(frameon=False)
 save_fig("cv_vs_bootstrap_ols")

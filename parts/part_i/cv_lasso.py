@@ -60,6 +60,7 @@ for ax, k in zip(axes, (5, 10)):
     ax.set_title(f"{k}-fold CV")
     ax.set_xlabel(r"$\log_{10}\lambda$")
     ax.set_ylabel("Polynomial degree")
+    ax.set_yticks(polydegree[1::2])
     fig.colorbar(im, ax=ax, label=r"$\log_{10}$ cross-validated MSE")
 plt.tight_layout()
 save_fig("cv_lasso_heatmap")
