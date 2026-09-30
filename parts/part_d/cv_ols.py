@@ -34,7 +34,7 @@ x, y, y_true = generate_data(n)
 max_degree = 20
 polydegree = np.arange(1, max_degree + 1)
 
-fig, ax = plt.subplots(figsize=(6.6, 4.0))
+fig, ax = plt.subplots(figsize=(9, 6))
 for k, color in ((5, BLUE), (10, RED)):
     kf = KFold(n_splits=k, shuffle=True, random_state=2026)
     cv_mse = np.zeros(max_degree)
@@ -58,6 +58,7 @@ ax.plot(polydegree, error, "s-", color=YELLOW, label="bootstrap error")
 ax.set_yscale("log")
 ax.set_xlabel("Polynomial degree")
 ax.set_xticks(polydegree[1::2])
+ax.set_title("OLS: Cross-validation and bootstrap estimates of the test error")
 ax.set_ylabel("MSE")
 ax.legend(frameon=False)
 save_fig("cv_vs_bootstrap_ols")

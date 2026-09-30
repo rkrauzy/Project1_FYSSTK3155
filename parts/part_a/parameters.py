@@ -30,6 +30,7 @@ for d in degrees:
     coeff_matrix[d - 1, :d] = theta
 
 plt.figure(figsize=(10, 6))
+colors = plt.cm.viridis(np.linspace(0, 1, max_degree))   # one colour per power, light to dark
 
 for k in range(max_degree):
     mask = ~np.isnan(coeff_matrix[:, k])
@@ -38,7 +39,8 @@ for k in range(max_degree):
         coeff_matrix[mask, k],
         "o-",
         linewidth=2,
-        label=f"θ_{k + 1}",
+        color=colors[k],
+        label=rf"$\theta_{{{k + 1}}}$",
     )
 
 plt.xlabel("Polynomial degree")

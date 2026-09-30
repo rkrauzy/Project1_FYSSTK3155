@@ -145,7 +145,7 @@ def plot_convergence(results, title, name):
         File name of the saved figure.
     """
 
-    plt.figure()
+    plt.figure(figsize=(9, 6))
 
     for method, result in results.items():
 

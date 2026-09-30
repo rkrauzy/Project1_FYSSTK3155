@@ -43,7 +43,7 @@ for sigma in sigma_values:
     q25 = np.percentile(errors, 25, axis=0)
     q75 = np.percentile(errors, 75, axis=0)
 
-    line, = plt.plot(degrees, median_mse, "o-", linewidth=2, label=f"sigma = {sigma}")
+    line, = plt.plot(degrees, median_mse, "o-", linewidth=2, label=rf"$\sigma = {sigma}$")
     plt.fill_between(degrees, q25, q75, alpha=0.15, color=line.get_color())
 
 plt.xlabel("Polynomial degree")

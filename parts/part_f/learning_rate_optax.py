@@ -96,7 +96,7 @@ def plot_final_error(results):
         Optimisation results for each method and learning rate.
     """
 
-    plt.figure()
+    plt.figure(figsize=(9, 6))
 
     for method in methods:
 

@@ -82,7 +82,7 @@ sigma_values = [0.0, 0.05, 0.1, 0.2]
 plt.figure(figsize=(9, 6))
 for sigma in sigma_values:
     median_mse, q25, q75 = repeated_test_mse(n=100, sigma=sigma)
-    line, = plt.plot(degrees, median_mse, "o-", linewidth=2, label=f"sigma = {sigma}")
+    line, = plt.plot(degrees, median_mse, "o-", linewidth=2, label=rf"$\sigma = {sigma}$")
     plt.fill_between(degrees, q25, q75, alpha=0.15, color=line.get_color())
 
 plt.xlabel("Polynomial degree")

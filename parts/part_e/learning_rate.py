@@ -66,7 +66,7 @@ for factor in factors:
     plt.semilogy(
         error,
         linewidth=2,
-        label=f"{factor} eta_max"
+        label=rf"${factor}\,\eta_{{\max}}$"
     )
 
 plt.xlabel("Iteration")
@@ -103,7 +103,7 @@ for factor in factors:
     plt.semilogy(
         error,
         linewidth=2,
-        label=f"{factor} eta_max"
+        label=rf"${factor}\,\eta_{{\max}}$"
     )
 
 plt.xlabel("Iteration")

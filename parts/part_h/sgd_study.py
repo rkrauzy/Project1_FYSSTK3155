@@ -57,9 +57,9 @@ print(f"largest single-point Hessian eigenvalue 2|x_i|^2 = {2 * xmax**2:.1f}, "
       f"so gamma must be below {2 / (2 * xmax**2):.3f} for M = 1\n")
 
 T = n_epochs * int(np.ceil(n_train / 5))
-for label, gamma, schedule in (("constant gamma = 0.1", 0.1, None), ("constant gamma = 0.02", 0.02, None),
-                               ("t0, t1 = (1, 10)", None, (1.0, 10.0)), ("t0, t1 = (20, 200)", None, (20.0, 200.0)),
-                               ("t0, t1 = (100, 1000)", None, (100.0, 1000.0))):
+for label, gamma, schedule in ((r"constant $\gamma = 0.1$", 0.1, None), (r"constant $\gamma = 0.02$", 0.02, None),
+                               (r"$(t_0, t_1) = (1, 10)$", None, (1.0, 10.0)), (r"$(t_0, t_1) = (20, 200)$", None, (20.0, 200.0)),
+                               (r"$(t_0, t_1) = (100, 1000)$", None, (100.0, 1000.0))):
     hist = sgd(X_train_s, y_train_c, n_epochs=n_epochs, batch_size=5, gamma=gamma, schedule=schedule)
     d = np.linalg.norm(hist - theta_ols, axis=1)
     gamma_t = np.full(T, gamma) if schedule is None else step_length(np.arange(1, T + 1), *schedule)
@@ -73,6 +73,6 @@ axes[0].set_ylabel(r"$\|\theta - \hat{\theta}_{\mathrm{OLS}}\|_2$")
 axes[0].set_ylim(1e-3, 10)
 for ax in axes:
     ax.set_xlabel("Epoch")
-    ax.legend(frameon=False)
+    ax.legend(loc="upper right")
 plt.tight_layout()
 save_fig("sgd_study")

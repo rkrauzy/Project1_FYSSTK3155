@@ -72,7 +72,7 @@ models = {
               lambda lmb: make_pipeline(StandardScaler(), Lasso(alpha=lmb / 2, max_iter=100000))),
 }
 
-fig, ax = plt.subplots(figsize=(6.6, 4.0))
+fig, ax = plt.subplots(figsize=(9, 6))
 for name, (lambdas, make_model) in models.items():
     mean, se = cv_curve(make_model, lambdas)
     lmb_min, lmb_1se = select(lambdas, mean, se)
