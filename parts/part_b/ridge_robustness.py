@@ -16,7 +16,7 @@ from src.plotting import save_fig
 
 
 degrees = range(1, 16)
-lmbda = 1e-2
+lmbda = 1e-4
 n_reps = 100
 
 
@@ -71,6 +71,7 @@ plt.ylabel("Test MSE")
 plt.title(f"Ridge (λ={lmbda}): Effect of number of data points")
 plt.xticks(degrees)
 plt.yscale("log")
+plt.ylim(5e-3, 20)   
 plt.legend()
 plt.tight_layout()
 save_fig("ridge_robustness_n")
@@ -81,7 +82,7 @@ sigma_values = [0.0, 0.05, 0.1, 0.2]
 plt.figure(figsize=(9, 6))
 for sigma in sigma_values:
     median_mse, q25, q75 = repeated_test_mse(n=100, sigma=sigma)
-    line, = plt.plot(degrees, median_mse, "o-", linewidth=2, label=f"sigma = {sigma}")
+    line, = plt.plot(degrees, median_mse, "o-", linewidth=2, label=rf"$\sigma = {sigma}$")
     plt.fill_between(degrees, q25, q75, alpha=0.15, color=line.get_color())
 
 plt.xlabel("Polynomial degree")
@@ -89,6 +90,7 @@ plt.ylabel("Test MSE")
 plt.title(f"Ridge (λ={lmbda}): Effect of noise level")
 plt.xticks(degrees)
 plt.yscale("log")
+plt.ylim(3e-4, 0.2)  
 plt.legend()
 plt.tight_layout()
 save_fig("ridge_robustness_sigma")

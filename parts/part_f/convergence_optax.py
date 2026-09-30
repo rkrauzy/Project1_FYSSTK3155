@@ -1,7 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-from src.data import generate_data, design_matrix
+from src.data import generate_data, design_matrix, scale_matrix, center_y, split_data
 from src.models import ols, ridge
 from src.gradient_descent import ols_gradient, ridge_gradient
 from src.optimiser import optimise_optax
@@ -131,7 +131,7 @@ def run_ridge(X, y):
 
     return theta_exact, results
 
-def plot_convergence(results, title):
+def plot_convergence(results, title, name):
     """
     Plot the relative error as a function of optimisation iterations.
 
@@ -141,9 +141,11 @@ def plot_convergence(results, title):
         Optimisation results for each method.
     title : str
         Title of the plot.
+    name : str
+        File name of the saved figure.
     """
 
-    plt.figure()
+    plt.figure(figsize=(9, 6))
 
     for method, result in results.items():
 
@@ -161,8 +163,7 @@ def plot_convergence(results, title):
     plt.legend()
     plt.grid(True)
 
-    plt.show()
-    save_fig("convergence_optax_methods")
+    save_fig(name)
 
 def print_results(results):
     """
@@ -201,10 +202,16 @@ def main():
         sigma = 0.1,
     )
 
-    X = design_matrix(
+    x_train, x_test, y_train, y_test = split_data(
         x,
-        degree = Degree,
+        y,
     )
+
+    X = scale_matrix(design_matrix(
+        x_train,
+        degree = Degree,
+    ))
+    y, y_mean = center_y(y_train)
 
     theta_ols, ols_results = run_ols(
         X,
@@ -217,6 +224,7 @@ def main():
     plot_convergence(
         ols_results,
         "OLS convergence",
+        "convergence_optax_ols",
     )
 
     theta_ridge, ridge_results = run_ridge(
@@ -230,6 +238,7 @@ def main():
     plot_convergence(
         ridge_results,
         "Ridge convergence",
+        "convergence_optax_ridge",
     )
 
 

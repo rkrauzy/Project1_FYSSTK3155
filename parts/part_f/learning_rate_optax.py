@@ -1,7 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-from src.data import generate_data, design_matrix
+from src.data import generate_data, design_matrix, scale_matrix, center_y, split_data
 from src.models import ols
 from src.gradient_descent import ols_gradient
 from src.optimiser import optimise_optax
@@ -96,7 +96,7 @@ def plot_final_error(results):
         Optimisation results for each method and learning rate.
     """
 
-    plt.figure()
+    plt.figure(figsize=(9, 6))
 
     for method in methods:
 
@@ -118,10 +118,9 @@ def plot_final_error(results):
     plt.xlabel("Initial learning rate")
     plt.ylabel("Final relative error")
     plt.title("Sensitivity to initial learning rate")
-    plt.legend()
+    plt.legend(loc="center left", bbox_to_anchor=(1, 0.5))
     plt.grid(True)
 
-    plt.show()
     save_fig("Learning_rate_optax_methods")
 
 def print_results(results):
@@ -164,10 +163,16 @@ def main():
         sigma = 0.1,
     )
 
-    X = design_matrix(
+    x_train, x_test, y_train, y_test = split_data(
         x,
-        degree = degree,
+        y,
     )
+
+    X = scale_matrix(design_matrix(
+        x_train,
+        degree = degree,
+    ))
+    y, y_mean = center_y(y_train)
 
     results = run_sensitivity(
         X,

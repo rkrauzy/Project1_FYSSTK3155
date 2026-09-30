@@ -4,6 +4,20 @@ This file documents the use of large language models in the development of the c
 
 The project authors reviewed, tested and interpreted all submitted code and results. LLM assistance is classified according to the course guidelines using Levels 0--4.
 
+
+### Repository restructuring and fixes
+
+**Tool:** Claude (Claude Code, Anthropic, September 2026)
+
+**LLM level:** 3 - Skeleton
+
+**Contribution:** Parts a), b) and e) were first written as standalone scripts with an intercept column in the design matrix. When the group agreed on a shared repository structure, Claude Code was used to adapt the code to it. In `src/data.py`, the intercept column was removed from `design_matrix`, `scale_matrix` was updated to standardise all columns, `center_y` was added and a global `SEED` constant was defined. In `src/models.py`, `ridge` was updated to the closed-form solution (XᵀX + nλI)⁻¹Xᵀy. In `src/gradient_descent.py`, `ridge_cost` and `ridge_gradient` were updated to regularise all parameters uniformly. In `src/plotting.py`, `dpi=150` and `plt.close()` were added to `save_fig`. The scripts in `parts/part_a/` and `parts/part_b/` were rewritten to import from the shared `src/` modules.
+
+Claude Code was later used to fix the part e) and f) scripts so they match the same structure. In the part e) scripts, the manual centering of `X_train[:, 1:]` was replaced with `scale_matrix`, and `y_train` is centred with `center_y`, as in `resampling.py`. `ridge_cost_jax` now matches `models.ridge`, with the penalty `lmbda * sum(theta**2)` on all coefficients, and `H_ridge` is now (2/n)XᵀX + 2λI, the Hessian of that cost. The part f) Optax scripts now use the same seed, `split_data`, `scale_matrix` and `center_y` as part e), so the results are comparable. Figures are saved with `save_fig` instead of `plt.show()`, with separate OLS and Ridge Optax convergence plots. Inaccurate claims about intercept exclusion and a machine-precision check were removed from earlier LLM declarations.
+
+**Verification:** All changes were reviewed and executed by the project authors. The restructured scripts were checked against the original standalone results, the analytical and JAX Ridge gradients were compared to machine precision with `gradient_check.py`, and all part e) and f) figures were regenerated.
+
+
 ## Shared source files
 
 ### `src/data.py`
@@ -48,7 +62,21 @@ The implementations of mean squared error and \(R^2\) were written independently
 
 **Contribution:** The bootstrap function is based on the bootstrap code in the week 36 Tuesday notebook (`week36tuesday.ipynb`). Claude assisted with adapting it to the repository structure: building the design matrix with `design_matrix`, scaling and centering each bootstrap sample with `scale_matrix` and `center_y` since the design matrix has no intercept column, and reshaping `y_test` to a column vector so that the error, bias and variance expressions broadcast correctly. The project authors replaced the least squares solver with their own `ols` function and corrected the indexing of the degree arrays.
 
+For part i), Claude also assisted with `bootstrap_lambda`, a copy of `bootstrap` with the loop over the polynomial degree replaced by a loop over λ at a fixed degree, using `ridge` or `lasso_fit` from `src/models.py` in place of `ols`, and with the seed reset for every λ so that all values of λ use the same bootstrap samples.
+
 **Verification:** Reviewed and executed by the project authors. The bootstrap estimates were checked to satisfy error = bias + variance to machine precision, and the results were compared with the original notebook version.
+
+---
+
+### `src/optimiser.py`
+
+**Tool:** Claude, Opus 5.5 (Anthropic, September 2026)
+
+**LLM level:** 2 - Snippet
+
+**Contribution:** The functions `optimiser_step`, `make_batches`, `step_length` and `sgd` are our own code from the week 38 exercises (`week38.ipynb`, Exercises 2 and 4), which follow the section Implementations in Chapter 4 of the lecture notes. Claude assisted with moving them to `src/optimiser.py` so they can be reused in parts h) and i), and with adapting `sgd` to the repository structure: the notebook's gradient function was replaced by `ridge_gradient` or `lasso_gradient` from `src/gradient_descent.py`, chosen by the arguments `lmbda` and `lasso`, and the default seed was set to `SEED` from `src/data.py`. The function `optimise_optax` is not covered by this entry.
+
+**Verification:** Reviewed and executed by the project authors. With `method="plain"` and a batch size equal to the number of training points, `sgd` reproduces the closed-form OLS and Ridge solutions to $10^{-14}$.
 
 ---
 
@@ -358,3 +386,80 @@ we use ridge from src.models/ which uses alpha = n * lmbdas we got different sca
 
 **Verification:** Reviewed and executed by the project authors, with analytical and JAX-based results compared numerically and visually.
 
+---
+
+## Part G
+
+### `parts/part_g/lasso_gd.py`
+
+**Tool:** Claude, Opus 5.5 (Anthropic, September 2026)
+
+**LLM level:** 3 - Skeleton
+
+**Contribution:** The script solves the Lasso problem, Eq. (3.57) in the lecture notes, with the gradient descent methods from parts e) and f), using `lasso_gradient` from `src/gradient_descent.py`. Claude assisted with assembling it from existing code: the gradient check from `parts/part_e/gradient_check.py`, extended to θ = 0 where |θ| is not differentiable; plain gradient descent with η = 1/λ_max of the OLS Hessian from `parts/part_e/convergence.py`; the momentum, AdaGrad, RMSprop and Adam runs with `optimise_optax` from `parts/part_f/convergence_optax.py`; the reference solution from `lasso_fit` in Chapter 3 of the lecture notes, with `alpha = λ/2` since `Scikit-Learn`'s Lasso divides the squared error by $2n$; and the test predictions from `parts/part_d/cv_own_vs_sklearn.py`. Claude also checked that `jax.grad` returns 1 for the derivative of |θ| at zero, while `np.sign` returns 0.
+
+**Verification:** Reviewed and executed by the project authors. The analytical and JAX gradients agree to $10^{-16}$ away from θ = 0 and differ by exactly λ at θ = 0, and all five methods reach a Lasso cost within $2 \cdot 10^{-4}$ of the `Scikit-Learn` solution.
+
+---
+
+## Part H
+
+### `parts/part_h/sgd_methods.py`
+
+**Tool:** Claude, Opus 5.5 (Anthropic, September 2026)
+
+**LLM level:** 3 - Skeleton
+
+**Contribution:** The script compares plain gradient descent, momentum, AdaGrad, RMSprop and Adam with and without stochastic gradient descent for OLS and Ridge, using our own `sgd` from `src/optimiser.py`. It follows the week 38 Tuesday notebook (`week38tuesday.ipynb`): the full-batch learning rates are taken from Case 1, Step 3, and the SGD learning rates and the printout of the distance to the closed-form solution from Case 2, Step 5. Claude assisted with assembling the script, and suggested running full batch and SGD in the same loop so that they are compared after the same number of single-point gradient evaluations, using 1000 epochs so that full-batch gradient descent has time to converge, and timing each run with `time.perf_counter`.
+
+**Verification:** Reviewed and executed by the project authors. Full-batch momentum reaches the closed-form OLS and Ridge solutions to $10^{-15}$, and momentum with $M = 5$ at $\gamma = 0.05$ diverges, as it did on the degree-5 exercise data in Case 2, Step 5 of the notebook.
+
+---
+
+### `parts/part_h/sgd_study.py`
+
+**Tool:** Claude, Opus 5.5 (Anthropic, September 2026)
+
+**LLM level:** 3 - Skeleton
+
+**Contribution:** The script studies plain SGD for OLS as a function of the minibatch size, the number of epochs and the learning-rate schedule, using our own `sgd` from `src/optimiser.py`. It follows Case 2 of the week 38 Tuesday notebook (`week38tuesday.ipynb`) and Exercise 4 of our week 38 exercises: the batch sizes and the stability limit for $M = 1$ are taken from Step 3, the schedules $\gamma_t = t_0/(t + t_1)$ from Step 4, and the sum of $\gamma_t$ from Exercise 4(c). Claude assisted with assembling the script, and suggested splitting panel (b) of the notebook's `fig_sgd` into one panel for the batch size and one for the schedule, with epochs on the x-axis so that the dependence on the number of epochs can be read directly from the figure.
+
+**Verification:** Reviewed and executed by the project authors. $M = 1$ diverges at $\gamma = 0.1$, above the single-point stability limit of $0.026$, and the schedule $(t_0, t_1) = (1, 10)$ freezes, the same behaviour as on the degree-5 exercise data in Case 2, Steps 3 and 4 of the notebook.
+
+---
+
+## Part I
+
+### `parts/part_i/cv_lasso.py`
+
+**Tool:** Claude, Opus 5.5 (Anthropic, September 2026)
+
+**LLM level:** 2 - Snippet
+
+**Contribution:** The script is a copy of `parts/part_d/cv_ridge.py` with Ridge replaced by Lasso. Claude assisted with the changes this required: `alpha = λ/2`, since `Scikit-Learn`'s Lasso divides the squared error by $2n$ (as in `lasso_fit` in Chapter 3 of the lecture notes); `max_iter = 100000`, as in the lecture notes; a λ grid from $10^{-6}$ to $1$, chosen so that it contains the cross-validation minimum and ends above $\lambda_{\max} = (2/n)\|X^T y\|_\infty \approx 0.46$, where every coefficient is zero (Proposition 3.8 in the lecture notes); and `n_jobs=-1` in `cross_val_score`, so that the folds run in parallel.
+
+**Verification:** Reviewed and executed by the project authors. The cross-validation minimum lies inside the λ grid, at degree 12 for both $k = 5$ and $k = 10$, and for λ above $\lambda_{\max}$ the cross-validated MSE is the same for every degree, since the model predicts the mean.
+
+---
+
+### `parts/part_i/bias_variance_lambda.py`
+
+**Tool:** Claude, Opus 5.5 (Anthropic, September 2026)
+
+**LLM level:** 3 - Skeleton
+
+**Contribution:** The script estimates the bias-variance decomposition of the test error for Ridge and Lasso as a function of λ at the fixed polynomial degree 12, with the bootstrap. It is an adaptation of `parts/part_c/bias_variance.py`, with λ on the x-axis instead of the degree, one panel for Ridge and one for Lasso, and the OLS error at the same degree as a reference line. The idea of turning λ at a fixed high degree follows Case 1, Step 4 of the week 36 Tuesday notebook (`week36tuesday.ipynb`). Claude assisted with the adaptation, and suggested using the same bootstrap samples for every λ, since the curves were otherwise dominated by the noise from different samples at small λ.
+
+**Verification:** Reviewed and executed by the project authors. Error = bias$^2$ + variance to machine precision for both methods, and at the smallest λ the Lasso error approaches the OLS error at degree 12.
+
+---
+
+### `parts/part_i/model_selection.py`
+
+**Tool:** Claude, Opus 5.5 (Anthropic, September 2026)
+
+**LLM level:** 3 - Skeleton
+
+**Contribution:** The script compares OLS, Ridge and Lasso at degree 12, the degree selected by cross-validation for all three methods, using the 5-fold cross-validated MSE with its standard error. It follows Case 2, Steps 5 and 6 of the week 36 Tuesday notebook (`week36tuesday.ipynb`): the functions `cv_curve` and `select`, which give the standard error over the folds and the one-standard-error choice of λ, are copied from Step 5 and adapted to our design matrix, and the figure is a simplified version of the comparison of Ridge and Lasso in Step 6, including the number of non-zero Lasso coefficients. The models and λ grids are the same as in `parts/part_d/cv_ols.py`, `parts/part_d/cv_ridge.py` and `parts/part_i/cv_lasso.py`. Claude assisted with assembling the script, and suggested the standard-error band for OLS and the markers for the minimum-CV and one-standard-error choices of λ in the figure.
+
+**Verification:** Reviewed and executed by the project authors. The minimum cross-validated errors for OLS, Ridge and Lasso at degree 12 agree with those from `cv_ols.py`, `cv_ridge.py` and `cv_lasso.py` for $k = 5$.

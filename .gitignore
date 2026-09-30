@@ -276,4 +276,8 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
+outputs/
+
+tables/
+
 # End of https://www.toptal.com/developers/gitignore/api/visualstudiocode,macos,linux,windows,python,jupyternotebooks

@@ -9,10 +9,9 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-from sklearn.model_selection import train_test_split
-
-from src.data import generate_data, design_matrix
+from src.data import generate_data, design_matrix, scale_matrix, center_y, split_data
 from src.models import ols, ridge
+from src.plotting import save_fig
 from src.gradient_descent import (
     gradient_descent,
     ols_gradient,
@@ -20,35 +19,23 @@ from src.gradient_descent import (
 )
 
 
-x, y, y_true = generate_data(n=100, sigma=0.1, seed=42)
+x, y, y_true = generate_data(n=100, sigma=0.1)
 
-x_train, x_test, y_train, y_test = train_test_split(
-    x,
-    y,
-    test_size=0.2,
-    random_state=42
-)
+x_train, x_test, y_train, y_test = split_data(x, y)
 
 degree = 5
 lmbda = 0.01
 n_iterations = 50000
 
-X_train = design_matrix(x_train, degree)
-
-mean_X = np.mean(X_train[:, 1:], axis=0)
-X_train[:, 1:] = X_train[:, 1:] - mean_X
+X_train = scale_matrix(design_matrix(x_train, degree))
+y_train, y_mean = center_y(y_train)
 
 theta_ols = ols(X_train, y_train)
 theta_ridge = ridge(X_train, y_train, lmbda)
 
 H_ols = (2 / len(y_train)) * X_train.T @ X_train
 
-I = np.eye(X_train.shape[1])
-I[0, 0] = 0
-
-H_ridge = (2 / len(y_train)) * (
-    X_train.T @ X_train + lmbda * I
-)
+H_ridge = (2 / len(y_train)) * X_train.T @ X_train + 2 * lmbda * np.eye(X_train.shape[1])
 
 eta_ols = 1 / np.max(np.linalg.eigvalsh(H_ols))
 eta_ridge = 1 / np.max(np.linalg.eigvalsh(H_ridge))
@@ -96,6 +83,21 @@ print()
 print("Ridge final difference:")
 print(np.linalg.norm(theta_gd_ridge - theta_ridge))
 
+tol = 1e-8
+
+relative_error_ols = error_ols / np.linalg.norm(theta_ols)
+relative_error_ridge = error_ridge / np.linalg.norm(theta_ridge)
+
+print()
+
+print("OLS iterations to reach relative error < tol:")
+print(np.argmax(relative_error_ols < tol) + 1)
+
+print()
+
+print("Ridge iterations to reach relative error < tol:")
+print(np.argmax(relative_error_ridge < tol) + 1)
+
 plt.figure(figsize=(9, 6))
 
 plt.semilogy(
@@ -115,4 +117,4 @@ plt.ylabel("Distance to closed-form solution")
 plt.title("Gradient descent: Convergence to closed-form solutions")
 plt.legend()
 plt.tight_layout()
-plt.show()
+save_fig("gd_convergence")

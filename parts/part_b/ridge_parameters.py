@@ -29,9 +29,10 @@ for i, lmb in enumerate(lambdas):
     theta_values[i] = ridge(X_train_s, y_train_c, lmb)
 
 plt.figure(figsize=(10, 6))
+colors = plt.cm.viridis(np.linspace(0, 1, theta_values.shape[1]))   # one colour per power, light to dark
 
 for k in range(theta_values.shape[1]):
-    plt.plot(lambdas, theta_values[:, k], "o-", linewidth=2, label=f"θ_{k + 1}")
+    plt.plot(lambdas, theta_values[:, k], "o-", linewidth=2, color=colors[k], label=rf"$\theta_{{{k + 1}}}$")
 
 plt.xscale("log")
 plt.yscale("symlog", linthresh=1)

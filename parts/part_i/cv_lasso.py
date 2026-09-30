@@ -1,27 +1,29 @@
 """
-Cross-validated MSE for Ridge regression as a function of both polynomial
+Cross-validated MSE for Lasso regression as a function of both polynomial
 degree and lambda, for k = 5 and k = 10, shown as heatmaps.
+
+A copy of parts/part_d/cv_ridge.py with Ridge replaced by Lasso.
 
 LLM-assisted
 ------------
 Tool: Claude, Opus 5.5 (Anthropic, September 2026)
-Level: 3 - Skeleton
-Role: Assisted with extending the Ridge cross-validation code from
-    week36tuesday (Case 2, Steps 2 and 3) from a fixed degree to a grid over
-    degree and lambda, with StandardScaler inside the pipeline so that scaling is
-    fitted on the training folds only, with choosing the lambda range, and with
-    presenting the grid as heatmaps.
+Level: 2 - Snippet
+Role: Assisted with adapting cv_ridge.py to Lasso: alpha = lambda / 2 since
+    Scikit-Learn's Lasso divides the squared error by 2n (lasso_fit in
+    Chapter 3 of the lecture notes), max_iter = 100000 as in the lecture notes,
+    a lambda grid from 1e-6 to 1 that contains the CV minimum and ends above
+    lambda_max = (2/n)||X^T y||_inf = 0.46 (Proposition 3.8), and n_jobs=-1 in
+    cross_val_score to run the folds in parallel.
 
-    Also Claude spotted minor inconsistency and fixed it: since in cv_own_vc_sklearn.py
-    we use ridge from src.models/ which uses alpha = n * lmbdas so we got wrong scaling
-    and best lambda. Adjusted for that here.
-
-Verification: Reviewed, executed and interpreted by the project authors.
+Verification:
+    Reviewed and executed by the project authors. The CV minimum lies inside
+    the lambda grid, at degree 12 for both k = 5 and k = 10, and above
+    lambda_max every coefficient is zero and the model predicts the mean.
 """
 
 import numpy as np
 import matplotlib.pyplot as plt
-from sklearn.linear_model import Ridge
+from sklearn.linear_model import Lasso
 from sklearn.preprocessing import StandardScaler
 from sklearn.pipeline import make_pipeline
 from sklearn.model_selection import KFold, cross_val_score
@@ -36,18 +38,17 @@ max_degree = 20
 polydegree = np.arange(1, max_degree + 1)
 
 nlambdas = 50
-lambdas = np.logspace(-10, 0, nlambdas)
+lambdas = np.logspace(-6, 0, nlambdas)
 
 fig, axes = plt.subplots(1, 2, figsize=(12, 4.5))
 for ax, k in zip(axes, (5, 10)):
     kfold = KFold(n_splits=k, shuffle=True, random_state=2026)
-    n_train = n * (k - 1) // k
     mse_sklearn = np.zeros((max_degree, nlambdas))
     for degree in polydegree:
         for i, lmb in enumerate(lambdas):
-            pipe = make_pipeline(StandardScaler(), Ridge(alpha= n_train * lmb))
+            pipe = make_pipeline(StandardScaler(), Lasso(alpha=lmb / 2, max_iter=100000))
             scores = cross_val_score(pipe, design_matrix(x, degree), y, cv=kfold,
-                                     scoring="neg_mean_squared_error")
+                                     scoring="neg_mean_squared_error", n_jobs=-1)
             mse_sklearn[degree - 1, i] = np.mean(-scores)
 
     best_deg, best_lmb = np.unravel_index(np.argmin(mse_sklearn), mse_sklearn.shape)
@@ -62,4 +63,4 @@ for ax, k in zip(axes, (5, 10)):
     ax.set_yticks(polydegree[1::2])
     fig.colorbar(im, ax=ax, label=r"$\log_{10}$ cross-validated MSE")
 plt.tight_layout()
-save_fig("cv_ridge_heatmap")
+save_fig("cv_lasso_heatmap")

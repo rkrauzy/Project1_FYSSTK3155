@@ -63,7 +63,7 @@ best = np.argmin(mse_sklearn)
 print(f"best lambda {lambdas[best]:.4g}, cross-validated MSE {mse_sklearn[best]:.4f}")
 print(f"largest relative difference: {np.max(np.abs(mse_KFold - mse_sklearn) / mse_sklearn):.2e}")
 
-fig, ax = plt.subplots(figsize=(6.6, 4.0))
+fig, ax = plt.subplots(figsize=(9, 6))
 ax.plot(np.log10(lambdas), mse_KFold, color=BLUE, lw=2, label="own KFold loop")
 ax.plot(np.log10(lambdas), mse_sklearn, "--", color=RED, lw=2, label="cross_val_score")
 ax.plot(np.log10(lambdas[best]), mse_sklearn[best], "o", color=YELLOW, ms=9,
@@ -71,6 +71,7 @@ ax.plot(np.log10(lambdas[best]), mse_sklearn[best], "o", color=YELLOW, ms=9,
 ax.set_yscale("log")
 ax.set_xlabel(r"$\log_{10}\lambda$")
 ax.set_ylabel("Cross-validated MSE")
+ax.set_title(f"Ridge, degree {degree}: own k-fold loop and cross_val_score")
 ax.legend(frameon=False)
 plt.tight_layout()
 save_fig("cv_own_vs_sklearn")
