@@ -36,6 +36,8 @@ for ax, n in zip(axes, (40, 100, 400)):
           f"bias^2 {bias[best]:.4f}  var {variance[best]:.4f}")
     for d in (1, 5, 10, 15, 20):
         print(f"   degree {d:2d}: error {error[d - 1]:.4f}  bias^2 {bias[d - 1]:.4f}  var {variance[d - 1]:.4f}")
+    rel_diff = np.max(np.abs(error - (bias + variance)) / error)
+    print(f"   max relative difference |error - (bias^2 + var)| / error: {rel_diff:.1e}")
 
     ax.plot(polydegree, error, "o-", label="Error")
     ax.plot(polydegree, bias, "s-", label=r"Bias$^2$ (+ $\sigma^2$)")
