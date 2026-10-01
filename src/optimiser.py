@@ -1,12 +1,9 @@
 import numpy as np
 import jax.numpy as jnp
-import jax
 import optax
 
 from src.data import SEED
 from src.gradient_descent import ridge_gradient, lasso_gradient
-
-jax.config.update("jax_enable_x64", True)
 
 def optimise_optax(
     gradient,
