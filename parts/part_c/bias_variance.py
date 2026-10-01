@@ -31,7 +31,9 @@ for ax, n in zip(axes, (40, 100, 400)):
     np.random.seed(2026)
     error, bias, variance = bootstrap(x_train, x_test, y_train, y_test, max_degree, n_bootstraps)
 
-    print(f"n = {n}: minimum error {error.min():.4f} at degree {np.argmin(error) + 1}")
+    best = np.argmin(error)
+    print(f"n = {n}: minimum error {error[best]:.4f} at degree {best + 1}, "
+          f"bias^2 {bias[best]:.4f}  var {variance[best]:.4f}")
     for d in (1, 5, 10, 15, 20):
         print(f"   degree {d:2d}: error {error[d - 1]:.4f}  bias^2 {bias[d - 1]:.4f}  var {variance[d - 1]:.4f}")
 
