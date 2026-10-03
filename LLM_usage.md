@@ -70,6 +70,17 @@ For part i), Claude also assisted with `bootstrap_lambda`, a copy of `bootstrap`
 
 ### `src/optimiser.py`
 
+**Tool:**  Tool: ChatGPT, GPT-5.6 Sol (OpenAI, September 2026)
+
+**LLM level:** 4 - Substantial
+
+**Contribution:** Assisted subsantially with the implementation of the 
+`optimise_optax` function using Optax, including Momentum, AdaGrad, RMSprop 
+and Adam to optimise parameter.
+
+**Verification:** Reviewed and tested by the project authors that the code
+calls upon the methods as intented.
+
 **Tool:** Claude, Opus 5.5 (Anthropic, September 2026)
 
 **LLM level:** 2 - Snippet
@@ -385,6 +396,50 @@ we use ridge from src.models/ which uses alpha = n * lmbdas we got different sca
 **Contribution:** ChatGPT substantially assisted with the implementation of gradient descent using both analytical gradients and JAX automatic differentiation for OLS and Ridge, including convergence comparisons with closed-form solutions.
 
 **Verification:** Reviewed and executed by the project authors, with analytical and JAX-based results compared numerically and visually.
+
+---
+
+## Part F
+
+### `parts/part_f/convergence_optax.py´
+
+**Tool:** Tool: ChatGPT, GPT-5.6 Sol (OpenAI, September 2026)
+
+**LLM level:** 4 - Substantial
+
+**Contribution:** Assisted with the formulation and implementation of the 
+result format.
+
+**Verification:** Reviewed and tested by the project authors.
+
+---
+
+### `parts/part_f/learning_rate_optax.py´
+
+**Tool:** Tool: ChatGPT, GPT-5.6 Sol (OpenAI, September 2026)
+
+**LLM level:** 3 - Skeleton
+
+**Contribution:** Copied the format from the previous usage in the 
+convergence_optax.py file.
+
+**Verification:** Reviewed and tested by the project authors.
+
+---
+
+### `parts/part_f/kappa.py´
+
+**Tool:** Claude, Sonnet 5.5 (Anthropic, October 2026)
+
+**LLM level:** 4 - Substantial
+
+**Contribution:** Suggested and substantially assisted with an additional 
+condition-number analysis for gradient based methods.
+The suggestion was reviewed and retained by the project authors to provide
+quantitative support for the discussion of optimisation dynamics and 
+convergence rates.
+
+**Verification:** Reviewed, executed and interpreted by the project authors.
 
 ---
 

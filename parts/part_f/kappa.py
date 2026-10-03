@@ -1,8 +1,8 @@
 # LLM-assisted
-# Tool: Claude, Sonnet 5.5 (OpenAI, October 2026)
+# Tool: Claude, Sonnet 5.5 (Anthropic, October 2026)
 # Level: 4 - Substantial
 # Role: Suggested and substantially assisted with an additional 
-# condition-number analysis for OLS, ridge methods.
+# condition-number analysis for gradient based methods.
 # The suggestion was reviewed and retained by the project authors to provide
 # quantitative support for the discussion of optimisation dynamics and 
 # convergence rates.
