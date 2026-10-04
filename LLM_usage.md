@@ -34,15 +34,7 @@ The implementation of the Runge function, data generation and polynomial design 
 
 The implementations of the closed-form OLS and Ridge regression estimators were written independently without LLM assistance.
 
----
-
-### `src/metrics.py`
-
-**LLM level:** 0 - None
-
-The implementations of mean squared error and \(R^2\) were written independently without LLM assistance.
-
----
+--- 
 
 ### `src/gradient_descent.py`
 
