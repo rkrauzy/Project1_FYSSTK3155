@@ -1,6 +1,11 @@
-# FYS-STK3155/4155 Project 1: Regression and gradient methods for the Runge function
+# FYS-STK3155 Project 1: Regression and gradient methods for the Runge function
 
-Albert Sjåvåg, Teodor Aursnes, Raphael Katsumi Soma Rauzy and Jørgen Sannerhaugen Florholmen
+### Authors: 
+- Albert Sjåvåg
+- Teodor Aursnes
+- Raphael Katsumi Soma Rauzy
+- Jørgen Sannerhaugen Florholmen
+
 University of Oslo, autumn 2026
 
 We fit the Runge function $f(x) = 1/(1+25x^2)$ on $[-1, 1]$ with polynomials, using ordinary least squares (OLS), Ridge and Lasso regression. Model complexity and the penalty are chosen with the bootstrap and $k$-fold cross-validation, and the closed-form solutions are compared with our own gradient descent, momentum, AdaGrad, RMSprop, Adam and stochastic gradient descent. The report is submitted separately as a PDF.
