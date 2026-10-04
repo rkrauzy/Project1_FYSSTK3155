@@ -1,0 +1,11 @@
+OLS analytic vs JAX:
+7.846781526336765e-16
+
+Ridge analytic vs JAX:
+1.6079679568759646e-16
+
+OLS JAX vs closed form:
+8.61664234409624e-15
+
+Ridge JAX vs closed form:
+5.963671512669132e-15

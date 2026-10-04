@@ -1,0 +1,16 @@
+
+OLS
+
+Results:
+momentum   iterations = 10000, final error = 1.026e-05
+adagrad    iterations = 10000, final error = 2.082e-02
+rmsprop    iterations = 10000, final error = 1.250e-02
+adam       iterations =  2114, final error = 8.330e-09
+
+Ridge
+
+Results:
+momentum   iterations = 10000, final error = 4.182e-06
+adagrad    iterations = 10000, final error = 5.285e-03
+rmsprop    iterations = 10000, final error = 1.553e-02
+adam       iterations =  1557, final error = 5.176e-09

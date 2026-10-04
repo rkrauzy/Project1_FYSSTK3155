@@ -1,0 +1,14 @@
+gradient check at theta = [-0.45 -0.2   0.05  0.3   0.55]: max difference 1.11e-16
+gradient check at theta = [0. 0. 0. 0. 0.]: max difference 1.00e-02
+jax.grad of |theta| at 0: 1.0, np.sign(0): 0.0
+
+OLS        test MSE 0.017814, nonzero 5, max |theta_odd| 1.4e-01, theta [-0.0718 -0.7122  0.144   0.5112 -0.0738]
+Ridge      test MSE 0.015710, nonzero 5, max |theta_odd| 6.6e-02, theta [-0.0419 -0.5955  0.066   0.3957 -0.0264]
+sklearn    test MSE 0.014472, nonzero 2, max |theta_odd| 0.0e+00, theta [-0.     -0.5933  0.      0.3917  0.    ]
+sklearn Lasso cost 0.049951
+
+plain      test MSE 0.014180, nonzero 5, iterations 10000, relative error 5.534e-03, cost 0.049990, max |theta_odd| 3.8e-03, theta [-3.8081e-03 -5.9362e-01  2.1452e-04  3.9222e-01 -7.2351e-04]
+momentum   test MSE 0.014504, nonzero 5, iterations 10000, relative error 3.556e-04, cost 0.049953, max |theta_odd| 1.9e-04, theta [ 7.3099e-05 -5.9335e-01  8.0379e-05  3.9179e-01  1.8880e-04]
+adagrad    test MSE 0.014521, nonzero 5, iterations 10000, relative error 9.763e-03, cost 0.049954, max |theta_odd| 1.5e-04, theta [-1.0193e-04 -5.8834e-01  1.5194e-04  3.8681e-01 -2.2558e-05]
+rmsprop    test MSE 0.014882, nonzero 5, iterations 10000, relative error 1.016e-02, cost 0.050057, max |theta_odd| 3.1e-03, theta [-0.0016 -0.5984  0.0031  0.3895  0.003 ]
+adam       test MSE 0.014659, nonzero 5, iterations 10000, relative error 3.202e-03, cost 0.049962, max |theta_odd| 2.0e-03, theta [-8.7081e-04 -5.9312e-01  2.6822e-04  3.9204e-01  2.0497e-03]

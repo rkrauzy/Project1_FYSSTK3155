@@ -1,0 +1,2 @@
+best lambda 5.179e-09, cross-validated MSE 0.0128
+largest relative difference: 3.27e-10

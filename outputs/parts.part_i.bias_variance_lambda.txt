@@ -1,0 +1,6 @@
+OLS   degree 12: error 0.4561  bias^2 0.0612  var 0.3950
+   max relative difference |error - (bias^2 + var)| / error: 7.2e-16
+Ridge degree 12: minimum error 0.0174 at lambda 1.27e-02, bias^2 0.0130  var 0.0045
+   max relative difference |error - (bias^2 + var)| / error: 4.2e-16
+Lasso degree 12: minimum error 0.0136 at lambda 6.16e-03, bias^2 0.0108  var 0.0028
+   max relative difference |error - (bias^2 + var)| / error: 4.3e-16

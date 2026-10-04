@@ -1,0 +1,11 @@
+OLS final difference:
+8.810646701771904e-15
+
+Ridge final difference:
+5.803773987984337e-15
+
+OLS iterations to reach relative error < tol:
+7957
+
+Ridge iterations to reach relative error < tol:
+2823

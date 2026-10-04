@@ -1,0 +1,3 @@
+n = 40: minimum test MSE 0.0343 at degree 6
+n = 100: minimum test MSE 0.0153 at degree 10
+n = 400: minimum test MSE 0.0107 at degree 18

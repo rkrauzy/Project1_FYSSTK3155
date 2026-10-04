@@ -1,0 +1,6 @@
+method rule       lambda   CV MSE      SE  non-zero
+OLS    -               -   0.0129  0.0028        12
+Ridge  min-CV   6.87e-09   0.0128  0.0028        12
+Ridge  one-SE   1.84e-07   0.0154  0.0034        12
+Lasso  min-CV   2.95e-05   0.0163  0.0036        11
+Lasso  one-SE   1.60e-04   0.0185  0.0045        10

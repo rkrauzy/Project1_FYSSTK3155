@@ -1,0 +1,11 @@
+M =   1, gamma = 0.1: distance after 10 / 100 / 1000 epochs 3.6e+02 / 2.9e+07 / inf
+M =   5, gamma = 0.1: distance after 10 / 100 / 1000 epochs 2.6e-01 / 2.1e-02 / 4.1e-02
+M =  20, gamma = 0.1: distance after 10 / 100 / 1000 epochs 6.3e-01 / 9.5e-02 / 1.5e-02
+M =  80, gamma = 0.1: distance after 10 / 100 / 1000 epochs 8.1e-01 / 4.0e-01 / 4.4e-02
+largest single-point Hessian eigenvalue 2|x_i|^2 = 77.4, so gamma must be below 0.026 for M = 1
+
+constant $\gamma = 0.1$: gamma after 1000 epochs 0.1000, sum of gamma_t  1600.0, distance after 10 / 100 / 1000 epochs 2.6e-01 / 2.1e-02 / 4.1e-02
+constant $\gamma = 0.02$: gamma after 1000 epochs 0.0200, sum of gamma_t   320.0, distance after 10 / 100 / 1000 epochs 6.8e-01 / 1.2e-01 / 1.2e-02
+$(t_0, t_1) = (1, 10)$: gamma after 1000 epochs 0.0001, sum of gamma_t     7.3, distance after 10 / 100 / 1000 epochs 7.0e-01 / 5.8e-01 / 4.9e-01
+$(t_0, t_1) = (20, 200)$: gamma after 1000 epochs 0.0012, sum of gamma_t    87.8, distance after 10 / 100 / 1000 epochs 3.4e-01 / 8.7e-02 / 4.8e-02
+$(t_0, t_1) = (100, 1000)$: gamma after 1000 epochs 0.0059, sum of gamma_t   283.3, distance after 10 / 100 / 1000 epochs 2.8e-01 / 4.1e-02 / 4.4e-03
