@@ -276,7 +276,7 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
-outputs/
+
 
 tables/
 

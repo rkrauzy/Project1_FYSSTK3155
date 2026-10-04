@@ -1,0 +1,21 @@
+n = 40: minimum error 0.0175 at degree 7, bias^2 0.0130  var 0.0045
+   degree  1: error 0.1228  bias^2 0.1186  var 0.0042
+   degree  5: error 0.0315  bias^2 0.0238  var 0.0076
+   degree 10: error 0.0246  bias^2 0.0152  var 0.0094
+   degree 15: error 131.3343  bias^2 1.3963  var 129.9380
+   degree 20: error 2712036.0132  bias^2 57522.8555  var 2654513.1577
+   max relative difference |error - (bias^2 + var)| / error: 4.4e-16
+n = 100: minimum error 0.0228 at degree 6, bias^2 0.0126  var 0.0102
+   degree  1: error 0.1021  bias^2 0.0991  var 0.0029
+   degree  5: error 0.0308  bias^2 0.0221  var 0.0087
+   degree 10: error 0.0588  bias^2 0.0072  var 0.0516
+   degree 15: error 2.9074  bias^2 0.0391  var 2.8683
+   degree 20: error 304.8146  bias^2 0.2185  var 304.5961
+   max relative difference |error - (bias^2 + var)| / error: 7.2e-16
+n = 400: minimum error 0.0126 at degree 12, bias^2 0.0117  var 0.0008
+   degree  1: error 0.1031  bias^2 0.1026  var 0.0005
+   degree  5: error 0.0255  bias^2 0.0248  var 0.0007
+   degree 10: error 0.0131  bias^2 0.0126  var 0.0005
+   degree 15: error 0.0129  bias^2 0.0123  var 0.0007
+   degree 20: error 0.0157  bias^2 0.0127  var 0.0030
+   max relative difference |error - (bias^2 + var)| / error: 4.0e-16

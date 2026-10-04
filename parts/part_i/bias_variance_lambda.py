@@ -34,6 +34,8 @@ x_train, x_test, y_train, y_test = split_data(x, y)
 np.random.seed(2026)
 error_ols, bias_ols, variance_ols = bootstrap(x_train, x_test, y_train, y_test, degree, n_bootstraps)
 print(f"OLS   degree {degree}: error {error_ols[-1]:.4f}  bias^2 {bias_ols[-1]:.4f}  var {variance_ols[-1]:.4f}")
+print(f"   max relative difference |error - (bias^2 + var)| / error: "
+      f"{np.max(np.abs(error_ols - (bias_ols + variance_ols)) / error_ols):.1e}")
 
 fig, axes = plt.subplots(1, 2, figsize=(11, 4.5), sharey=True)
 for ax, name, lasso in zip(axes, ("Ridge", "Lasso"), (False, True)):
@@ -43,6 +45,8 @@ for ax, name, lasso in zip(axes, ("Ridge", "Lasso"), (False, True)):
     best = np.argmin(error)
     print(f"{name:5s} degree {degree}: minimum error {error[best]:.4f} at lambda {lambdas[best]:.2e}, "
           f"bias^2 {bias[best]:.4f}  var {variance[best]:.4f}")
+    print(f"   max relative difference |error - (bias^2 + var)| / error: "
+          f"{np.max(np.abs(error - (bias + variance)) / error):.1e}")
 
     ax.plot(lambdas, error, "o-", label="Error")
     ax.plot(lambdas, bias, "s-", label=r"Bias$^2$ (+ $\sigma^2$)")

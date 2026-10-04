@@ -40,6 +40,7 @@ n_train = len(y_train_c)
 
 n_epochs = 1000
 batch_size = 5
+summary = {}                              # (name, method) -> {"full"/"sgd": (gamma, d10, d1000, time)}
 
 for name, lmbda, theta_exact in (("OLS", 0.0, ols(X_train_s, y_train_c)),
                                  ("Ridge", 0.01, ridge(X_train_s, y_train_c, 0.01))):
@@ -60,3 +61,14 @@ for name, lmbda, theta_exact in (("OLS", 0.0, ols(X_train_s, y_train_c)),
             print(f"{method:8s} {label:11s} gamma = {gamma:.3f}: distance after 10 / 100 / 1000 epochs "
                   f"{d[10]:.1e} / {d[100]:.1e} / {d[1000]:.1e}, "
                   f"updates {n_epochs * int(np.ceil(n_train / M)):5d}, time {elapsed:.2f} s")
+            key = "full" if M == n_train else "sgd"
+            summary.setdefault((name, method), {})[key] = (gamma, d[10], d[1000], elapsed)
+
+# One line per method, in the layout of tables/sgd_methods.tex
+for name in ("OLS", "Ridge"):
+    print(f"\nSummary {name}: gamma full / SGD, distance after 10 epochs full / SGD, "
+          f"after 1000 epochs full / SGD, time full / SGD")
+    for method in ("plain", "momentum", "adagrad", "rmsprop", "adam"):
+        (gf, f10, f1000, tf), (gs, s10, s1000, ts) = (summary[(name, method)][k] for k in ("full", "sgd"))
+        print(f"{method:8s}  {gf:.2f} / {gs:.2f}   {f10:.1e} / {s10:.1e}   "
+              f"{f1000:.1e} / {s1000:.1e}   {tf:.2f} / {ts:.2f} s")

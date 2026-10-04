@@ -1,0 +1,36 @@
+
+momentum
+eta = 1e-04, iterations = 10000, error = 4.443e-01
+eta = 3e-04, iterations = 10000, error = 1.366e-01
+eta = 1e-03, iterations = 10000, error = 4.889e-02
+eta = 3e-03, iterations = 10000, error = 4.561e-03
+eta = 1e-02, iterations = 10000, error = 1.026e-05
+eta = 3e-02, iterations = 10000, error = 2.762e-06
+eta = 1e-01, iterations = 10000, error = 2.499e-08
+
+adagrad
+eta = 1e-04, iterations = 10000, error = 9.947e-01
+eta = 3e-04, iterations = 10000, error = 9.848e-01
+eta = 1e-03, iterations = 10000, error = 9.189e-01
+eta = 3e-03, iterations = 10000, error = 5.779e-01
+eta = 1e-02, iterations = 10000, error = 2.082e-02
+eta = 3e-02, iterations = 10000, error = 9.208e-06
+eta = 1e-01, iterations = 10000, error = 3.376e-06
+
+rmsprop
+eta = 1e-04, iterations = 10000, error = 1.153e-04
+eta = 3e-04, iterations = 10000, error = 3.719e-04
+eta = 1e-03, iterations = 10000, error = 1.249e-03
+eta = 3e-03, iterations = 10000, error = 3.750e-03
+eta = 1e-02, iterations = 10000, error = 1.250e-02
+eta = 3e-02, iterations = 10000, error = 3.750e-02
+eta = 1e-01, iterations = 10000, error = 1.250e-01
+
+adam
+eta = 1e-04, iterations = 10000, error = 1.105e-01
+eta = 3e-04, iterations = 10000, error = 1.044e-07
+eta = 1e-03, iterations = 10000, error = 3.053e-06
+eta = 3e-03, iterations =  5191, error = 8.330e-09
+eta = 1e-02, iterations =  2114, error = 8.330e-09
+eta = 3e-02, iterations =   372, error = 8.330e-09
+eta = 1e-01, iterations =   401, error = 8.330e-09

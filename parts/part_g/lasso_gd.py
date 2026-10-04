@@ -56,10 +56,12 @@ print(f"jax.grad of |theta| at 0: {jax.grad(jnp.abs)(0.0)}, np.sign(0): {np.sign
 
 theta_sklearn = Lasso(alpha=lmbda / 2, fit_intercept=False, max_iter=100000,
                       tol=1e-10).fit(X_train_s, y_train_c).coef_
+odd = slice(0, degree, 2)                 # columns x, x^3, x^5, ...: zero for the even Runge function
 for name, theta in (("OLS", ols(X_train_s, y_train_c)), ("Ridge", ridge(X_train_s, y_train_c, lmbda)),
                     ("sklearn", theta_sklearn)):
     print(f"{name:10s} test MSE {np.mean((X_test_s @ theta + y_mean - y_test) ** 2):.6f}, "
-          f"nonzero {np.sum(theta != 0)}")
+          f"nonzero {np.sum(theta != 0)}, max |theta_odd| {np.max(np.abs(theta[odd])):.1e}, "
+          f"theta {np.array2string(theta, precision=4)}")
 print(f"sklearn Lasso cost {lasso_cost(X_train_s, y_train_c, theta_sklearn, lmbda):.6f}\n")
 
 grad = lambda theta: lasso_gradient(X_train_s, y_train_c, theta, lmbda)
@@ -74,4 +76,5 @@ for method in ["plain", "momentum", "adagrad", "rmsprop", "adam"]:
                                                 np.zeros(degree), theta_sklearn, tol)
     print(f"{method:10s} test MSE {np.mean((X_test_s @ theta + y_mean - y_test) ** 2):.6f}, "
           f"nonzero {np.sum(theta != 0)}, iterations {len(errors):5d}, "
-          f"relative error {errors[-1]:.3e}, cost {lasso_cost(X_train_s, y_train_c, theta, lmbda):.6f}")
+          f"relative error {errors[-1]:.3e}, cost {lasso_cost(X_train_s, y_train_c, theta, lmbda):.6f}, "
+          f"max |theta_odd| {np.max(np.abs(theta[odd])):.1e}, theta {np.array2string(theta, precision=4)}")

@@ -1,141 +1,100 @@
-# Project1_FYSSTK3155
+# FYS-STK3155/4155 Project 1: Regression and gradient methods for the Runge function
 
+Albert Sjåvåg, Teodor Aursnes, Raphael Katsumi Soma Rauzy and Jørgen Sannerhaugen Florholmen
+University of Oslo, autumn 2026
 
-## midlertidig kommentar til gutta som forklarer tanken litt
+We fit the Runge function $f(x) = 1/(1+25x^2)$ on $[-1, 1]$ with polynomials, using ordinary least squares (OLS), Ridge and Lasso regression. Model complexity and the penalty are chosen with the bootstrap and $k$-fold cross-validation, and the closed-form solutions are compared with our own gradient descent, momentum, AdaGrad, RMSprop, Adam and stochastic gradient descent. The report is submitted separately as a PDF.
 
-### Repo struktur: 
+## Installation
 
-Vi forsøker å ha all gjenbrukbar kode i src (source) så når f.eks albert skal gjøre oppgave c har jeg ferdig data som kan hentes ut og kan bare kalle på modellene jeg trenger, f.eks OLS eller Lasso Hvis jeg skulle trenge å resample i oppgaven min ligger også koden i resampling.py og jeg kan bare kalle på det. 
-
-Når man løser en oppgave kan det gjøres inni for eksempel part_c/ -mappa. 
-
-Hvis jeg i oppgaven jeg løser mmå burke lasso for eksempel kan jeg hente den øverst i filen min slik: 
+Tested with Python 3.13.
 
 ```
-from src.models import lasso
-
-fit = lasso(..)   
-```
-når de funksjonene er laget da. 
-
-
-
-```
-Project1_FYSSTK3155/
-├── README.md                # hva prosjektet er, hvordan kjøre koden
-├── LLM_usage.md             # løpende logg over LLM-bruk
-├── requirements.txt         # pakker som må installeres
-├── .gitignore
-│
-├── src/                     # gjenbrukbar kode som importeres
-│   ├── __init__.py
-│   ├── data.py              # Runge-funksjon, støy, skalering, train/test split
-│   ├── metrics.py           # mse, r2
-│   ├── models.py            # OLS, Ridge, Lasso
-│   ├── gradient_descent.py  # GD, momentum, AdaGrad, RMSprop, Adam, SGD
-│   ├── resampling.py        # bootstrap, k-fold CV
-│   └── plotting.py          # lagrer alle plott i figures/
-│
-├── parts/                   # én mappe per deloppgave
-│   ├── __init__.py
-│   ├── part_a/
-│   │   └── fil.py
-│   │   └── fil.py
-│   ├── part_b/
-│   │   └── fil.py
-│   │   └── fil.py
-│   └── ...
-│
-├── notebooks/               # utforsking og eksperimenter, valgfritt
-└── figures/                 # alle ferdige plott, lastes opp til Overleaf
+pip install -r requirements.txt
 ```
 
-## Forklaring av ulike mapper: 
-### (1) LLM_usage.md
-Hver gang man genererer med claude kode skal man manuelt fylle inn eksempelvis: 
+## Running the code
 
-#### Code (levels 0-4)
-| File | Level | Who | Description |
+All scripts are run as modules from the repository root:
+
+```
+python -m parts.part_c.bias_variance
+```
+
+Figures are saved to `figures/`. Most scripts finish in a few seconds. `parts.part_i.cv_lasso` takes about 3 minutes and `parts.part_i.bias_variance_lambda` about 1 minute. All random numbers use the seed 2026 (`SEED` in `src/data.py`), so every run reproduces the numbers in the report.
+
+The printed output of every script is stored in `outputs/`, so the numbers in the report and in `tables/` can be checked without running the code. To regenerate one file, for example:
+
+```
+python -m parts.part_c.bias_variance > outputs/parts.part_c.bias_variance.txt 2>/dev/null
+```
+
+## Structure
+
+```
+src/                     reusable code, imported by all scripts
+  data.py                Runge function, data generation, design matrix, scaling, train/test split
+  models.py              closed-form OLS and Ridge; Lasso via Scikit-Learn
+  gradient_descent.py    cost functions, analytical gradients (OLS, Ridge, Lasso), plain gradient descent
+  optimiser.py           momentum, AdaGrad, RMSprop, Adam and minibatch SGD (own code); Optax wrapper
+  resampling.py          bootstrap bias-variance decomposition, over degree and over lambda
+  plotting.py            save_fig, saves every figure to figures/
+parts/part_a … part_i/   one folder per part of the project, one script per analysis
+figures/                 all figures used in the report
+tables/                  LaTeX tables with the numbers printed by the scripts
+outputs/                 printed output of every script, e.g. parts.part_c.bias_variance.txt
+LLM_usage.md             declaration of the use of large language models
+```
+
+## Scripts, figures and tables
+
+The output of each script is in `outputs/parts.<part>.<script>.txt`.
+
+| Part | Script | Figure(s) in `figures/` | Table in `tables/` |
 |---|---|---|---|
-| src/data.py | 0 | Albert | Written independently |
-| src/gradient_descent.py | 3 | ... | Claude gave the class skeleton; update rules written and tested by us |
+| a) OLS | `part_a/baseline.py` | `ols_mse` | |
+| | `part_a/parameters.py` | `ols_parameters` | |
+| | `part_a/fitted_curves.py` | `ols_fitted_curves` | |
+| | `part_a/conditioning.py` | `ols_conditioning` | |
+| | `part_a/sample_size.py` | `ols_sample_size` | |
+| | `part_a/noise.py` | `ols_noise` | |
+| b) Ridge | `part_b/ridge_baseline.py` | `ridge_mse` | |
+| | `part_b/ridge_parameters.py` | `ridge_parameters` | |
+| | `part_b/ridge_singular_values.py` | `ridge_singular_values` | |
+| | `part_b/ridge_robustness.py` | `ridge_robustness_n`, `ridge_robustness_sigma` | |
+| c) Bias-variance | `part_c/train_test_MSE.py` | `prediction_error_vs_complexity` | `train_test_MSE` |
+| | `part_c/bias_variance.py` | `bias_variance_tradeoff` | `bias_variance` |
+| d) Cross-validation | `part_d/cv_ols.py` | `cv_vs_bootstrap_ols` | `cv_ols` |
+| | `part_d/cv_ridge.py` | `cv_ridge_heatmap` | `cv_ridge` |
+| | `part_d/cv_own_vs_sklearn.py` | `cv_own_vs_sklearn` | `cv_own_vs_sklearn` |
+| e) Gradient descent | `part_e/gradient_check.py` | | `gradient_check` |
+| | `part_e/autodiff_gd.py` | `autodiff_gd_ols`, `autodiff_gd_ridge` | `autodiff_gd` |
+| | `part_e/convergence.py` | `gd_convergence` | `convergence` |
+| | `part_e/learning_rate.py` | `gd_learning_rate_ols`, `gd_learning_rate_ridge` | `learning_rate` |
+| f) Adaptive methods | `part_f/convergence_optax.py` | `convergence_optax_ols`, `convergence_optax_ridge` | `convergence_optax` |
+| | `part_f/learning_rate_optax.py` | `Learning_rate_optax_methods` | `learning_rate_optax` |
+| g) Lasso | `part_g/lasso_gd.py` | | `lasso_gd` |
+| h) SGD | `part_h/sgd_methods.py` | | `sgd_methods` |
+| | `part_h/sgd_study.py` | `sgd_study` | `sgd_study` |
+| i) Model selection | `part_i/cv_lasso.py` | `cv_lasso_heatmap` | `cv_lasso` |
+| | `part_i/model_selection.py` | `model_selection` | `model_selection` |
+| | `part_i/bias_variance_lambda.py` | `bias_variance_lambda` | `bias_variance_lambda` |
 
-#### Text (levels 0-3)
-| Section | Level | Notes |
-|---|---|---|
-| Abstract | 1 | Grammar check |
+## Conventions
 
-Her er link til hva som er ulike levels:
-https://github.com/EducationalMaterialUiO/MachineLearningUiO/blob/main/LLM_Usage_Declaration_Guidelines.md
+- The design matrix has no intercept column. The columns of $X$ are standardised and $y$ is centred with the training statistics only, also inside every cross-validation fold and bootstrap sample.
+- Ridge minimises $(1/n)\|X\theta - y\|^2 + \lambda\|\theta\|_2^2$, with closed form $(X^TX + n\lambda I)^{-1}X^Ty$. Scikit-Learn's `Ridge` therefore uses `alpha = n * lambda`.
+- Lasso minimises $(1/n)\|X\theta - y\|^2 + \lambda\|\theta\|_1$. Scikit-Learn's `Lasso` therefore uses `alpha = lambda / 2`.
+- 100 data points, noise $\sigma = 0.1$, 80/20 train/test split.
 
-BTW.. i funksjoner dokumenterer man AI bruk slik: 
-```
-def heipådeg():
-    """
+## Verification
 
-    LLM-assisted
-    ------------
-    Tool: Claude  (September 2026)
-    Role: Generated the Jacobian accumulation loop using torch.autograd.functional.jacobian.
-    Modifications: Added batching over inputs to avoid OOM on GPU; verified output against
-    finite-difference approximation on a two-layer network.
-    """
-    pass
-```
-### (2) requirements.txt
-Her legger man inn pakker man må installere for å kjøre programmet, eksempelvis under:
-```
-numpy  
-scipy  
-matplotlib  
-sklearn
-jax  
-jupyter  
-```
+- Analytical gradients agree with JAX automatic differentiation to $10^{-16}$ (OLS, Ridge, and Lasso away from $\theta_j = 0$).
+- Gradient descent and full-batch SGD reproduce the closed-form OLS and Ridge solutions to $10^{-14}$.
+- Our own $k$-fold loop reproduces `cross_val_score` to a relative difference of $3 \times 10^{-10}$.
+- The bootstrap estimates satisfy error = bias$^2$ + variance to machine precision.
+- Gradient descent on the Lasso cost reaches the cost of Scikit-Learn's solution to within $2 \times 10^{-4}$.
 
-I terminal skriver man bare "pip install -r requirements.txt". Ikke en veldig viktig fil, kan fikse på slutten. 
+## Use of large language models
 
-### (3) data.py
-Raph skal fikse denne, men generelt sett er denne for å alltid ha ferdig gjenbrukbar data. :
-
-```
-SEED = 2026 # eller noe
-
-
-def runge(x):
-    return 1.0 / (1.0 + 25.0 * x**2)
-
-def make_data(n, sigma=, rng=None):
-    ..
-def poly_design(x, degree):
-    ..
-```
-### (4) metrics.py
-Ulike funksjoner man kan kalle på hvis det trengs. veldig enkel fil som definerer og anvender MSE eller MAE osv. 
-
-### (5) models.py
-Også veldig enkel fil som anvender OLS, RIdge og Lasso. 
-
-### (6) data VIKTIG
-I overleaf skal man laste opp en mappe med alle bilder/plots man vil bruke. Den skal inneholde bare .png filer som man enkelt kan legge inn i rapporten. 
-Eksempelvis når jeg har skrevet kode og ønsker å lage et bilde skriver man kode slik: 
-
-```
-from src.plotting import save_fig
-
-plt.plot(degrees, mse_test)  
-plt.xlabel("Polynomial degree")  
-plt.ylabel("MSE")  
-save_fig("partA_mse_vs_degree")   
-plt.close()          # frigjør minne når et script lager mange figurer. 
-```
-Her har man laget et plot og kaller det for "partA_mse_vs_degree". Det vil lagres i figures/ mappen i repoet sammen med resten av bildene. Plottet blir lagret i mappen som en .png.
-Kan bruke plt.show() Hvis man vil se plottet umiddelbart. 
-
-
-# Tips til kjøring i terminal:
-når man står i repo roten (der du kan se src og parts og readme.md og alt annet) skriv for eksempel: 
-python -m parts.part_c.test.py
-
-
-
+See [LLM_usage.md](LLM_usage.md) for a file-by-file declaration.

@@ -72,7 +72,7 @@ models = {
               lambda lmb: make_pipeline(StandardScaler(), Lasso(alpha=lmb / 2, max_iter=100000))),
 }
 
-fig, ax = plt.subplots(figsize=(9, 6))
+fig, ax = plt.subplots(figsize=(6, 4))      # one column of the report
 for name, (lambdas, make_model) in models.items():
     mean, se = cv_curve(make_model, lambdas)
     lmb_min, lmb_1se = select(lambdas, mean, se)
@@ -82,7 +82,7 @@ for name, (lambdas, make_model) in models.items():
         j = np.searchsorted(lambdas, lmb)
         nonzero = np.sum(make_model(lmb).fit(X, y)[-1].coef_ != 0)
         print(f"{name:6s} {rule:7s} {lmb:9.2e} {mean[j]:8.4f} {se[j]:7.4f} {nonzero:>9d}")
-        ax.plot(lmb, mean[j], marker, color=line.get_color(), ms=8, mec="black")
+        ax.plot(lmb, mean[j], marker, color=line.get_color(), ms=6, mec="black")
 ax.axhline(ols_mean, color="black", ls="--", label="OLS, 5-fold CV")
 ax.axhspan(ols_mean - ols_se, ols_mean + ols_se, color="gray", alpha=0.2)
 ax.plot([], [], "o", color="white", mec="black", label=r"$\lambda_{\min}$")
@@ -91,6 +91,6 @@ ax.set_yscale("log")
 ax.set_xlabel(r"$\lambda$")
 ax.set_ylabel("Cross-validated MSE")
 ax.set_title(f"Degree {degree}: CV error with one standard error")
-ax.legend(frameon=False)
+ax.legend(frameon=False, fontsize=8)
 plt.tight_layout()
 save_fig("model_selection")

@@ -1,0 +1,2 @@
+k =  5: best degree 12, best lambda 2.947e-05, cross-validated MSE 0.0163
+k = 10: best degree 12, best lambda 1.265e-05, cross-validated MSE 0.0156
