@@ -34,7 +34,7 @@ for lmb in lambdas:
     plt.plot(mode_numbers, shrinkage, "o-", linewidth=2, label=f"λ={lmb:g}")
 
 plt.xlabel("Singular-value mode")
-plt.ylabel("Shrinkage factor  s²/(s² + n·λ)")
+plt.ylabel("Shrinkage factor")
 plt.title("Ridge: Shrinkage of singular-value modes")
 plt.xticks(mode_numbers)
 plt.ylim(-0.05, 1.05)

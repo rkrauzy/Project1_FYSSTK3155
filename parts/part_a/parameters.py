@@ -29,7 +29,7 @@ for d in degrees:
     theta = ols(X_train_s, y_train_c)
     coeff_matrix[d - 1, :d] = theta
 
-plt.figure(figsize=(10, 6))
+plt.figure(figsize=(9, 7))
 colors = plt.cm.viridis(np.linspace(0, 1, max_degree))   # one colour per power, light to dark
 
 for k in range(max_degree):
@@ -48,6 +48,7 @@ plt.ylabel("Coefficient value")
 plt.title("OLS: Coefficients as a function of polynomial degree")
 plt.xticks(degrees)
 plt.yscale("symlog", linthresh=1)
-plt.legend(bbox_to_anchor=(1.02, 1), loc="upper left", fontsize=7)
+sm = plt.cm.ScalarMappable(cmap="viridis", norm=plt.Normalize(1, max_degree))
+plt.colorbar(sm, ax=plt.gca(), label=r"Index $j$ of $\theta_j$")   # replaces a legend with one entry per coefficient
 plt.tight_layout()
 save_fig("ols_parameters")

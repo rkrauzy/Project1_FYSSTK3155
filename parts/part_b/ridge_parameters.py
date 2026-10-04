@@ -28,7 +28,7 @@ theta_values = np.zeros((len(lambdas), X_train_s.shape[1]))
 for i, lmb in enumerate(lambdas):
     theta_values[i] = ridge(X_train_s, y_train_c, lmb)
 
-plt.figure(figsize=(10, 6))
+plt.figure(figsize=(9, 7))
 colors = plt.cm.viridis(np.linspace(0, 1, theta_values.shape[1]))   # one colour per power, light to dark
 
 for k in range(theta_values.shape[1]):
@@ -39,6 +39,7 @@ plt.yscale("symlog", linthresh=1)
 plt.xlabel("λ")
 plt.ylabel("Coefficient value")
 plt.title("Ridge: Coefficients as a function of λ (degree 15)")
-plt.legend(bbox_to_anchor=(1.05, 1), loc="upper left", fontsize=7)
+sm = plt.cm.ScalarMappable(cmap="viridis", norm=plt.Normalize(1, theta_values.shape[1]))
+plt.colorbar(sm, ax=plt.gca(), label=r"Index $j$ of $\theta_j$")   # replaces a legend with one entry per coefficient
 plt.tight_layout()
 save_fig("ridge_parameters")
