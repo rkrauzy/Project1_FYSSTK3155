@@ -14,6 +14,7 @@ from src.data import generate_data, design_matrix, scale_matrix, center_y, split
 from src.models import ols
 from src.plotting import save_fig
 
+plt.rcdefaults()   # Matplotlib's default style for this figure, not the report style set in src/plotting.py
 
 x, y, y_true = generate_data(n=100, sigma=0.1)
 x_train, x_test, y_train, y_test = split_data(x, y)
@@ -42,4 +43,4 @@ plt.ylabel("y")
 plt.title("OLS: Polynomial fits to the Runge function")
 plt.legend()
 plt.tight_layout()
-save_fig("ols_fitted_curves")
+save_fig("ols_fitted_curves", print_size=False)
